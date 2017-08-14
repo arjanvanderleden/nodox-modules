@@ -1,0 +1,44 @@
+{
+  "name": "nodox-modules",
+  "version": "0.0.1",
+  "description": "Modules to be used with Nodox",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.js",
+  "scripts": {
+    "build:test": "tsc -p ./test/tsconfig.json",
+    "pretest": "npm run build && npm run build:test",
+    "test": "mocha --reporter spec",
+    "clean:dist": "del-cli ./dist",
+    "prebuild": "npm run clean:dist",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arjanvanderleden/nodox-modules.git"
+  },
+  "keywords": [
+    "Nodox"
+  ],
+  "author": "arjan.vander.leden@stepup.nl",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/arjanvanderleden/nodox-modules/issues"
+  },
+  "homepage": "https://github.com/arjanvanderleden/nodox-modules#readme",
+  "dependencies": {
+    "@types/chai": "^4.0.3",
+    "@types/mocha": "^2.2.41",
+    "@types/snapsvg": "^0.4.29",
+    "chai": "^4.1.1",
+    "coveralls": "^2.13.1",
+    "del-cli": "^1.1.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.5.0",
+    "nodox-core": "^0.1.3",
+    "snapsvg": "^0.5.1",
+    "typescript": "^2.4.2"
+  },
+  "devDependencies": {
+    "@types/node": "^8.0.20"
+  }
+}
