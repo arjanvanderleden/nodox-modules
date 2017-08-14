@@ -3,14 +3,17 @@
   "version": "0.0.1",
   "description": "Modules to be used with Nodox",
   "main": "./dist/index.js",
-  "types": "./dist/index.d.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build:test": "tsc -p ./test/tsconfig.json",
     "pretest": "npm run build && npm run build:test",
     "test": "mocha --reporter spec",
     "clean:dist": "del-cli ./dist",
     "prebuild": "npm run clean:dist",
-    "build": "tsc"
+    "build": "tsc",
+    "precover": "npm run pretest",
+    "cover": "node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -R spec test/*.js"
+
   },
   "repository": {
     "type": "git",
@@ -27,15 +30,18 @@
   "homepage": "https://github.com/arjanvanderleden/nodox-modules#readme",
   "dependencies": {
     "@types/chai": "^4.0.3",
+    "@types/color-convert": "^1.9.0",
     "@types/mocha": "^2.2.41",
-    "@types/snapsvg": "^0.4.29",
     "chai": "^4.1.1",
+    "color-convert": "^1.9.0",
     "coveralls": "^2.13.1",
     "del-cli": "^1.1.0",
+    "iconv-lite": "^0.4.18",
     "istanbul": "^0.4.5",
     "mocha": "^3.5.0",
     "nodox-core": "^0.1.3",
-    "snapsvg": "^0.5.1",
+    "svg.js": "^2.6.3",
+    "svgdom": "0.0.15",
     "typescript": "^2.4.2"
   },
   "devDependencies": {

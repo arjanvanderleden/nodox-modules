@@ -12,8 +12,11 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var nodox_core_1 = require("nodox-core");
 var Nodox_Modules_NodoxModule_1 = require("./Nodox.Modules.NodoxModule");
-var Snap = require("snapsvg");
-var window = window || null;
+var convert = require("color-convert");
+var window = require('svgdom');
+var SVG = require("svg.js");
+SVG(window);
+var document = window.document;
 var Svg = (function (_super) {
     __extends(Svg, _super);
     function Svg() {
@@ -407,7 +410,7 @@ var Svg = (function (_super) {
                         name: "color",
                         description: "Color of the fill",
                         dataType: _this.namespace + ".color",
-                        defaultValue: Snap.color("#000000")
+                        defaultValue: null
                     }, {
                         name: "opacity",
                         description: "Fill opacity",
@@ -440,7 +443,7 @@ var Svg = (function (_super) {
                         name: "color",
                         description: "Stroke color",
                         dataType: _this.namespace + ".color",
-                        defaultValue: Snap.color("#000000")
+                        defaultValue: null
                     }, {
                         name: "width",
                         description: "Stroke width",
@@ -531,7 +534,7 @@ var Svg = (function (_super) {
             },
             {
                 name: "translate",
-                description: "create a circle",
+                description: "translates an element",
                 processFunction: _this.processTranslate,
                 preprocessFunction: _this.preprocess,
                 icon: "nodox:svg_translate",
@@ -645,14 +648,15 @@ var Svg = (function (_super) {
         var r = Math.min(Math.max(+inputParams["r"], 0), 1) * 255;
         var g = Math.min(Math.max(+inputParams["g"], 0), 1) * 255;
         var b = Math.min(Math.max(+inputParams["b"], 0), 1) * 255;
-        result["color"].push(Snap.color({ r: r, g: g, b: b })); //"rgb(" + r + "," + g + "," + b + ")")
+        result["color"].push(new SVG.Color({ r: r, g: g, b: b }));
     };
     Svg.prototype.processHsvColor = function (context, result, inputParams, index) {
         result["color"] = result["color"] || new Array();
         var h = Math.min(Math.max(+inputParams["h"], 0), 1);
         var s = Math.min(Math.max(+inputParams["s"], 0), 1);
         var v = Math.min(Math.max(+inputParams["v"], 0), 1);
-        result["color"].push(Snap.color({ h: h, s: s, b: v }));
+        var color = convert.hsv.rgb([h, s, v]);
+        result["color"].push(new SVG.Color({ r: color[0], g: color[1], b: color[2] }));
     };
     Svg.prototype.processPoint = function (context, result, inputParams, index) {
         result["point"] = result["point"] || new Array();
@@ -664,8 +668,7 @@ var Svg = (function (_super) {
         result["circle"] = result["circle"] || new Array();
         var point = inputParams["center"];
         var radius = +inputParams["radius"];
-        result["circle"].push(context.paper.circle(point.x, point.y, radius));
-        //result["sum"].push(a + b);
+        result["circle"].push(context.svg.circle(radius).move(point.x, point.y));
     };
     Svg.prototype.processRectangle = function (context, result, inputParams, index) {
         result["rectangle"] = result["rectangle"] || new Array();
@@ -673,7 +676,11 @@ var Svg = (function (_super) {
         var width = +inputParams["width"];
         var height = +inputParams["height"];
         var radius = +inputParams["radius"];
-        result["rectangle"].push(context.paper.rect(point.x, point.y, width, height, isNaN(radius) ? 0 : radius, isNaN(radius) ? 0 : radius));
+        var rect = context.svg.rect(width, height);
+        rect.move(point.x, point.y);
+        if (!isNaN(radius))
+            rect.radius(radius);
+        result["rectangle"].push(rect);
     };
     Svg.prototype.processDeltaPoint = function (context, result, inputParams, index) {
         result["distance"] = result["distance"] || new Array();
@@ -687,9 +694,10 @@ var Svg = (function (_super) {
         result["angle"].push(Math.atan2(vector.y, vector.x) / Math.PI / 2 + 0.5);
     };
     Svg.prototype.processEllipse = function (context, result, inputParams, index) {
-        var a = inputParams["a"];
-        var b = inputParams["b"];
-        result["sum"].push(a + b);
+        var width = +inputParams["width"];
+        var height = +inputParams["height"];
+        var ellipse = context.svg.ellipse(width, height);
+        result["ellipse"].push();
     };
     // number
     // center : point
@@ -730,12 +738,11 @@ var Svg = (function (_super) {
             pointsAdded++;
         }
         pathString += " Z";
-        result["polygon"].push(context.paper.path(pathString));
+        result["polygon"].push(context.svg.path(pathString));
     };
     Svg.prototype.processText = function (context, result, inputParams, index) {
-        var a = inputParams["a"];
-        var b = inputParams["b"];
-        result["sum"].push(a + b);
+        var text = "" + inputParams["text"];
+        result["sum"].push(context.svg.text(text));
     };
     Svg.prototype.processSetStroke = function (context, result, inputParams, index) {
         result["element"] = result["element"] || new Array();
@@ -743,7 +750,7 @@ var Svg = (function (_super) {
         var color = inputParams["color"];
         var width = +inputParams["width"];
         if (element && element.attr) {
-            element.attr({ stroke: Snap.rgb(color.r, color.g, color.b), strokeWidth: width });
+            element.attr({ stroke: color.toHex(), strokeWidth: width });
         }
         result["element"].push(element);
     };
@@ -754,7 +761,7 @@ var Svg = (function (_super) {
         var opacity = +inputParams["opacity"];
         opacity = Math.max(0, Math.min(1, opacity));
         if (element && element.attr) {
-            element.attr({ fill: Snap.rgb(color.r, color.g, color.b) });
+            element.attr({ fill: color.toHex() });
             if (opacity < 1) {
                 element.attr({ fillOpacity: opacity });
             }
@@ -762,10 +769,10 @@ var Svg = (function (_super) {
         result["element"].push(element);
     };
     Svg.prototype.processGroup = function (context, result, inputParams, index) {
-        context.groupElement = context.groupElement || context.paper.g();
+        var gElement = context.groupElement = context.groupElement || context.svg.group();
         var element = inputParams["element"];
         if (element) {
-            context.groupElement.add(element);
+            gElement.add(element);
         }
     };
     Svg.prototype.postprocessGroup = function (context, nodeValues) {
@@ -788,7 +795,7 @@ var Svg = (function (_super) {
             context.collectedElements.fourthElements = new Array();
             context.collectedElements.fifthElements = new Array();
             if (doGroup) {
-                context.groupElement = context.groupElement || context.paper.g();
+                context.groupElement = context.groupElement || context.svg.group();
             }
         }
         if (firstElement)
@@ -824,17 +831,30 @@ var Svg = (function (_super) {
         }
         context.collectedElements = null;
     };
+    Svg.prototype.applyMatrix = function (element, matrix) {
+        element.transform({
+            a: matrix.a,
+            b: matrix.a,
+            c: matrix.c,
+            d: matrix.d,
+            e: matrix.e,
+            f: matrix.f
+        });
+    };
     //input svg element
     //input matrix abcd ef
     //input svg element
     Svg.prototype.processTransform = function (context, result, inputParams, index) {
         result["element"] = result["element"] || new Array();
         var element = inputParams["element"];
-        var point = inputParams["center"];
-        var angle = +inputParams["angle"];
-        var matrix = element.transform().localMatrix;
-        matrix.rotate(angle, point.x, point.y);
-        element.transform(matrix);
+        var a = +inputParams["a"];
+        var b = +inputParams["b"];
+        var c = +inputParams["c"];
+        var d = +inputParams["d"];
+        var e = +inputParams["e"];
+        var f = +inputParams["f"];
+        var matrix = new SVG.Matrix({ a: a, b: b, c: c, d: d, e: e, f: f });
+        this.applyMatrix(element, matrix);
         result["element"].push(element);
     };
     //input svg element
@@ -846,14 +866,14 @@ var Svg = (function (_super) {
         var element = inputParams["element"];
         var point = inputParams["center"];
         if (!point) {
-            var bbox = element.getBBox();
+            var bbox = element.bbox();
             point = new nodox_core_1.Point(bbox.cx, bbox.cy);
         }
         var angle = +inputParams["angle"] * 360;
         //var matrix = <Snap.Matrix> element.transform().localMatrix;
-        var matrix = element.transform().localMatrix;
+        var matrix = new SVG.Matrix(element);
         matrix.rotate(angle, point.x, point.y);
-        element.transform(matrix);
+        this.applyMatrix(element, matrix);
         result["element"].push(element);
     };
     //input svg element
@@ -865,9 +885,9 @@ var Svg = (function (_super) {
         var element = inputParams["element"];
         var point = inputParams["center"];
         var factor = +inputParams["factor"];
-        var matrix = element.transform().localMatrix;
+        var matrix = new SVG.Matrix(element);
         matrix.scale(factor, factor, point.x, point.y);
-        element.transform(matrix);
+        this.applyMatrix(element, matrix);
         result["element"].push(element);
     };
     //input svg element
@@ -879,23 +899,23 @@ var Svg = (function (_super) {
         var element = inputParams["element"];
         var dx = +inputParams["dx"];
         var dy = +inputParams["dy"];
-        element.transform("t" + dx + "," + dy);
+        element.translate(dx, dy);
         result["element"].push(element);
     };
     //output pattern
     //output patternName
     //output svg element
     Svg.prototype.processCreatePattern = function (context, result, inputParams, index) {
-        var a = inputParams["a"];
-        var b = inputParams["b"];
-        result["sum"].push(a + b);
+        result["element"] = result["element"] || new Array();
+        var element = inputParams["element"];
+        result["element"].push(element);
     };
     //input patternName
     //input svg element
     Svg.prototype.processSetPattern = function (context, result, inputParams, index) {
-        var a = inputParams["a"];
-        var b = inputParams["b"];
-        result["sum"].push(a + b);
+        result["element"] = result["element"] || new Array();
+        var element = inputParams["element"];
+        result["element"].push(element);
     };
     Svg.prototype.processRadialGrid = function (context, result, inputParams, index) {
         result["point"] = result["point"] || new Array();
@@ -934,8 +954,7 @@ var Svg = (function (_super) {
         nodeValues.values["count"].push(nodeValues.values["point"].length);
     };
     Svg.prototype.preprocess = function (context) {
-        context.paper = context.paper || Snap('#svgOutput');
-        context.paper.clear();
+        context.svg = SVG(document.documentElement);
     };
     return Svg;
 }(Nodox_Modules_NodoxModule_1.NodoxModule));

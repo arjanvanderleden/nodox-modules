@@ -1,9 +1,8 @@
-/// <reference types="snapsvg" />
 import { IRunningContext, INodoxModule, NodeValues } from 'nodox-core';
 import { NodoxModule } from "./Nodox.Modules.NodoxModule";
-import * as Snap from 'snapsvg';
+import * as SVG from 'svg.js';
 export interface ISvgRunningContext extends IRunningContext {
-    paper: Snap.Paper;
+    svg: any;
 }
 export declare class Svg extends NodoxModule {
     merge(otherModule: INodoxModule): INodoxModule;
@@ -23,6 +22,7 @@ export declare class Svg extends NodoxModule {
     protected postprocessGroup(context: ISvgRunningContext, nodeValues: NodeValues): void;
     protected processCombine(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number): void;
     protected postprocessCombine(context: ISvgRunningContext, nodeValues: NodeValues): void;
+    protected applyMatrix(element: SVG.Element, matrix: SVG.Matrix): void;
     protected processTransform(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number): void;
     protected processRotate(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number): void;
     protected processScale(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number): void;

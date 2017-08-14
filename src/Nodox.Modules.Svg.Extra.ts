@@ -1,7 +1,11 @@
 import { ISvgRunningContext } from "./Nodox.Modules.Svg";
 import { INodeDefinition, IDataType, Point, IInputDescriptor, IOutputDescriptor, NodeValues } from "nodox-core";
 import { NodoxModule } from "./Nodox.Modules.NodoxModule";
-import * as Snap from 'snapsvg';
+import * as convert from "color-convert";
+const window   = require('svgdom')
+import * as SVG from 'svg.js';
+SVG(window)
+const document = window.document
 
 export class SvgExtra extends NodoxModule {
     constructor() {
@@ -138,14 +142,12 @@ export class SvgExtra extends NodoxModule {
             pathString += " Z";
           }
         }
-        result["sun"].push(context.paper.path(pathString));
+        result["sun"].push(context.svg.path(pathString));
 
       }
 
       protected preprocess(context: ISvgRunningContext) {
-        context.paper = context.paper || Snap('#svgOutput');
-        context.paper.clear();
-      }
-
+        SVG(window);
+        context.svg = SVG(window.document.documentElement);      }
     }
 

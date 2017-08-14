@@ -1,6 +1,6 @@
 ﻿import { Svg, ISvgRunningContext } from './Nodox.Modules.Svg';
 import { INodoxModule, INodeDefinition, IOutputDescriptor, NodeValues, Point, IInputDescriptor } from 'nodox-core';
-import * as Snap from 'snapsvg';
+
 
 export class SvgGrids extends Svg {
 

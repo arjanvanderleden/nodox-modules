@@ -1,10 +1,13 @@
 ﻿import { IRunningContext, INodoxModule, IDataType, INodeDefinition, IInputDescriptor, IOutputDescriptor, Point, NodeProcessingMode, NodeValues, IPoint } from 'nodox-core';
 import { NodoxModule } from "./Nodox.Modules.NodoxModule";
-import * as Snap from 'snapsvg';
-
+import * as convert from "color-convert";
+const window   = require('svgdom')
+import * as SVG from 'svg.js';
+SVG(window)
+const document = window.document
 
 export interface ISvgRunningContext extends IRunningContext {
-  paper: Snap.Paper;
+  svg: any;
 }
 
 export class Svg extends NodoxModule {
@@ -13,7 +16,7 @@ export class Svg extends NodoxModule {
     return super.merge(otherModule);
   }
 
-  constructor() {
+  constructor() {    
     super();
     this.name = "Svg";
     this.description = "Definitions for creating svg elements";
@@ -406,7 +409,7 @@ export class Svg extends NodoxModule {
             name: "color",
             description: "Color of the fill",
             dataType: this.namespace + ".color",
-            defaultValue: Snap.color("#000000")
+            defaultValue: null
           }, {
             name: "opacity",
             description: "Fill opacity",
@@ -439,7 +442,7 @@ export class Svg extends NodoxModule {
             name: "color",
             description: "Stroke color",
             dataType: this.namespace + ".color",
-            defaultValue: Snap.color("#000000")
+            defaultValue: null
           }, {
             name: "width",
             description: "Stroke width",
@@ -530,7 +533,7 @@ export class Svg extends NodoxModule {
       },
       {
         name: "translate",
-        description: "create a circle",
+        description: "translates an element",
         processFunction: this.processTranslate,
         preprocessFunction: this.preprocess,
         icon: "nodox:svg_translate",
@@ -642,7 +645,7 @@ export class Svg extends NodoxModule {
     var r = Math.min(Math.max(+inputParams["r"], 0), 1) * 255;
     var g = Math.min(Math.max(+inputParams["g"], 0), 1) * 255;
     var b = Math.min(Math.max(+inputParams["b"], 0), 1) * 255;
-    result["color"].push(Snap.color(<any>{ r: r, g: g, b: b }));//"rgb(" + r + "," + g + "," + b + ")")
+    result["color"].push(new SVG.Color({r:r,g:g,b:b}));
   }
 
   protected processHsvColor(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number) {
@@ -650,7 +653,8 @@ export class Svg extends NodoxModule {
     var h = Math.min(Math.max(+inputParams["h"], 0), 1);
     var s = Math.min(Math.max(+inputParams["s"], 0), 1);
     var v = Math.min(Math.max(+inputParams["v"], 0), 1);
-    result["color"].push(Snap.color(<any>{ h: h, s: s, b: v }));
+    var color = convert.hsv.rgb([h,s,v]);
+    result["color"].push(new SVG.Color({r:color[0],g:color[1],b:color[2]}));
   }
 
   protected processPoint(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number) {
@@ -664,8 +668,7 @@ export class Svg extends NodoxModule {
     result["circle"] = result["circle"] || new Array<any>();
     var point = inputParams["center"];
     var radius = +inputParams["radius"];
-    result["circle"].push(context.paper.circle(point.x, point.y, radius));
-    //result["sum"].push(a + b);
+    result["circle"].push(context.svg.circle(radius).move(point.x, point.y));
   }
 
   protected processRectangle(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number) {
@@ -674,7 +677,10 @@ export class Svg extends NodoxModule {
     var width = +inputParams["width"];
     var height = +inputParams["height"];
     var radius = +inputParams["radius"];
-    result["rectangle"].push(context.paper.rect(point.x, point.y, width, height, isNaN(radius) ? 0 : radius, isNaN(radius) ? 0 : radius));
+    var rect = context.svg.rect(width,height);
+    rect.move(point.x,point.y);
+    if (!isNaN(radius)) rect.radius(radius);
+    result["rectangle"].push(rect);
   }
   protected processDeltaPoint(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number) {
     result["distance"] = result["distance"] || new Array<number>();
@@ -689,9 +695,10 @@ export class Svg extends NodoxModule {
   }
 
   protected processEllipse(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number) {
-    var a = inputParams["a"];
-    var b = inputParams["b"];
-    result["sum"].push(a + b);
+    var width = +inputParams["width"];
+    var height = +inputParams["height"];
+    var ellipse = context.svg.ellipse(width,height);
+    result["ellipse"].push()
   }
 
   // number
@@ -735,34 +742,33 @@ export class Svg extends NodoxModule {
     }
 
     pathString += " Z"
-    result["polygon"].push(context.paper.path(pathString));
+    result["polygon"].push(context.svg.path(pathString));
   }
 
   protected processText(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number) {
-    var a = inputParams["a"];
-    var b = inputParams["b"];
-    result["sum"].push(a + b);
+    var text = "" + inputParams["text"];
+    result["sum"].push(context.svg.text(text));
   }
 
   protected processSetStroke(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number) {
     result["element"] = result["element"] || new Array<any>();
-    var element = inputParams["element"];
-    var color = inputParams["color"];
+    var element = <SVG.Shape> inputParams["element"];
+    var color = <SVG.Color> inputParams["color"];
     var width = +inputParams["width"];
     if (element && element.attr) {
-      element.attr({ stroke: Snap.rgb(color.r, color.g, color.b), strokeWidth: width })
+      element.attr({ stroke: color.toHex() , strokeWidth: width })
     }
     result["element"].push(element);
   }
 
   protected processSetFill(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number) {
     result["element"] = result["element"] || new Array<any>();
-    var element = inputParams["element"];
-    var color = inputParams["color"];
+    var element = <SVG.Shape>inputParams["element"];
+    var color = <SVG.Color>inputParams["color"];
     var opacity = +inputParams["opacity"];
     opacity = Math.max(0, Math.min(1, opacity));
     if (element && element.attr) {
-      element.attr({ fill: Snap.rgb(color.r, color.g, color.b) })
+      element.attr({ fill: color.toHex() })
       if (opacity < 1) {
         element.attr({ fillOpacity: opacity })
       }
@@ -771,10 +777,10 @@ export class Svg extends NodoxModule {
   }
 
   protected processGroup(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number) {
-    (<any>context).groupElement = (<any>context).groupElement || context.paper.g();
+    var gElement : SVG.G = (<any>context).groupElement = (<any>context).groupElement || context.svg.group();
     var element = inputParams["element"];
     if (element) {
-      (<any>context).groupElement.add(element);
+      gElement.add(element);
     }
   }
 
@@ -798,7 +804,7 @@ export class Svg extends NodoxModule {
       (<any>context).collectedElements.thirdElements = new Array<any>();
       (<any>context).collectedElements.fourthElements = new Array<any>();
       (<any>context).collectedElements.fifthElements = new Array<any>();
-      if (doGroup) { (<any>context).groupElement = (<any>context).groupElement || context.paper.g(); }
+      if (doGroup) { (<any>context).groupElement = (<any>context).groupElement || context.svg.group();}
     }
     if (firstElement) (<any>context).collectedElements.firstElements.push(firstElement);
     if (secondEement) (<any>context).collectedElements.secondElements.push(secondEement);
@@ -831,20 +837,33 @@ export class Svg extends NodoxModule {
 
   }
 
-
+  protected applyMatrix(element:SVG.Element, matrix : SVG.Matrix){
+    element.transform({
+      a:matrix.a,
+      b:matrix.a,
+      c:matrix.c,
+      d:matrix.d,
+      e:matrix.e,
+      f:matrix.f
+    });
+  }
 
   //input svg element
   //input matrix abcd ef
   //input svg element
   protected processTransform(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number) {
     result["element"] = result["element"] || new Array<any>();
-    var element = inputParams["element"];
-    var point = inputParams["center"];
-    var angle = +inputParams["angle"];
+    var element = <SVG.Element>inputParams["element"];
+    
+    var a = +inputParams["a"];
+    var b = +inputParams["b"];
+    var c = +inputParams["c"];
+    var d = +inputParams["d"];
+    var e = +inputParams["e"];
+    var f = +inputParams["f"];
 
-    var matrix = <Snap.Matrix>element.transform().localMatrix;
-    matrix.rotate(angle, point.x, point.y);
-    element.transform(matrix);
+    var matrix = new SVG.Matrix({a:a,b:b,c:c,d:d,e:e,f:f});    
+    this.applyMatrix(element, matrix);
     result["element"].push(element);
   }
 
@@ -855,18 +874,18 @@ export class Svg extends NodoxModule {
   //ouput svg element
   protected processRotate(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number) {
     result["element"] = result["element"] || new Array<any>();
-    var element = inputParams["element"];
+    var element = <SVG.Element> inputParams["element"];
     var point = inputParams["center"];
     if (!point) {
-      var bbox = element.getBBox();
+      var bbox = element.bbox();
       point = new Point(bbox.cx, bbox.cy);
     }
     var angle = +inputParams["angle"] * 360;
 
     //var matrix = <Snap.Matrix> element.transform().localMatrix;
-    var matrix = <Snap.Matrix>element.transform().localMatrix;
+    var matrix = new SVG.Matrix(element);
     matrix.rotate(angle, point.x, point.y);
-    element.transform(matrix);
+    this.applyMatrix(element, matrix);
     result["element"].push(element);
   }
 
@@ -876,13 +895,13 @@ export class Svg extends NodoxModule {
   //ouput svg element
   protected processScale(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number) {
     result["element"] = result["element"] || new Array<any>();
-    var element = inputParams["element"];
-    var point = inputParams["center"];
+    var element = <SVG.Element>inputParams["element"];
+    var point = <IPoint> inputParams["center"];
     var factor = +inputParams["factor"];
 
-    var matrix = <Snap.Matrix>element.transform().localMatrix;
+    var matrix = new SVG.Matrix(element);
     matrix.scale(factor, factor, point.x, point.y);
-    element.transform(matrix);
+    this.applyMatrix(element, matrix);
     result["element"].push(element);
   }
 
@@ -897,7 +916,7 @@ export class Svg extends NodoxModule {
     var dx = +inputParams["dx"];
     var dy = +inputParams["dy"];
 
-    element.transform("t" + dx + "," + dy);
+    element.translate(dx,dy);
     result["element"].push(element);
   }
 
@@ -906,18 +925,18 @@ export class Svg extends NodoxModule {
   //output patternName
   //output svg element
   protected processCreatePattern(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number) {
-    var a = inputParams["a"];
-    var b = inputParams["b"];
-    result["sum"].push(a + b);
+    result["element"] = result["element"] || new Array<any>();
+    var element = inputParams["element"];
+    result["element"].push(element);
   }
 
 
   //input patternName
   //input svg element
   protected processSetPattern(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number) {
-    var a = inputParams["a"];
-    var b = inputParams["b"];
-    result["sum"].push(a + b);
+    result["element"] = result["element"] || new Array<any>();
+    var element = inputParams["element"];
+    result["element"].push(element);
   }
 
 
@@ -964,8 +983,8 @@ export class Svg extends NodoxModule {
 
 
   protected preprocess(context: ISvgRunningContext) {
-    context.paper = context.paper || Snap('#svgOutput');
-    context.paper.clear();
+    context.svg = SVG(document.documentElement);
+    
   }
 
 }

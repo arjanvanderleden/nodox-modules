@@ -12,7 +12,10 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var nodox_core_1 = require("nodox-core");
 var Nodox_Modules_NodoxModule_1 = require("./Nodox.Modules.NodoxModule");
-var Snap = require("snapsvg");
+var window = require('svgdom');
+var SVG = require("svg.js");
+SVG(window);
+var document = window.document;
 var SvgExtra = (function (_super) {
     __extends(SvgExtra, _super);
     function SvgExtra() {
@@ -135,11 +138,11 @@ var SvgExtra = (function (_super) {
                 pathString += " Z";
             }
         }
-        result["sun"].push(context.paper.path(pathString));
+        result["sun"].push(context.svg.path(pathString));
     };
     SvgExtra.prototype.preprocess = function (context) {
-        context.paper = context.paper || Snap('#svgOutput');
-        context.paper.clear();
+        SVG(window);
+        context.svg = SVG(window.document.documentElement);
     };
     return SvgExtra;
 }(Nodox_Modules_NodoxModule_1.NodoxModule));
