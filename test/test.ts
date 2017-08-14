@@ -6,7 +6,6 @@ import { Core, Calc, Datasets, Domains, Svg, SvgExtra, SvgGrids } from '../dist'
 describe('#NodoxModules', () => {
     var service: INodoxService;
     beforeEach(() => {
-        (<any>global).window = null;
         service = new NodoxService();
     });
 
@@ -49,6 +48,65 @@ describe('#NodoxModules', () => {
         expect(module).to.be.equal(svg);        
         expect(module.definitions.length).to.be.greaterThan(0);
     })
+
+    it('Should hava a definition for Point',()=>{
+        var svg = new Svg();
+        service.registerModule(svg);
+        var module = service.getModules()[0];
+        var definition = module.definitions.find(d=>d.fullName=='nodox.modules.svg.point');
+        expect(definition).to.be.a('object');
+    })
+
+    it('Should create a node with definition "Point"',()=>{
+        var svg = new Svg();
+        service.registerModule(svg);
+        var module = service.getModules()[0];
+        var definition = module.definitions.find(d=>d.fullName=='nodox.modules.svg.point');
+        var document = service.createNewDocument();
+        var node = service.addNode(document,definition);
+        expect(node).to.be.a('object');
+    })
+
+    it('Should create two nodes "Point" and one node Vector and connect these',()=>{
+        var svg = new Svg();
+        service.registerModule(svg);
+        var module = service.getModules()[0];
+        var defPoint = module.definitions.find(d=>d.fullName=='nodox.modules.svg.point');
+        var defVector = module.definitions.find(d=>d.fullName=='nodox.modules.svg.vector');
+        var document = service.createNewDocument();
+        var point1 = service.addNode(document,defPoint);
+        var point2 = service.addNode(document,defPoint);
+        var vector = service.addNode(document,defVector);
+        expect(point1).to.be.a('object');
+        expect(point2).to.be.a('object');
+        expect(vector).to.be.a('object');
+        // var connection1 = service.connect(document, vector.inputs[0], point1.outputs[0]);
+        // var connection2 = service.connect(document, vector.inputs[1], point2.outputs[0]);
+        service.connect(document, vector.inputs[0], point1.outputs[0]);
+        service.connect(document, vector.inputs[1], point2.outputs[0]);
+        expect(document.connections[0]).to.be.a('object');
+        expect(document.connections[1]).to.be.a('object');
+    })
+
+    it('After connecting two Points and one Vector, it should be serialized in a valid json string',()=>{
+        var svg = new Svg();
+        service.registerModule(svg);
+        var module = service.getModules()[0];
+        var defPoint = module.definitions.find(d=>d.fullName=='nodox.modules.svg.point');
+        var defVector = module.definitions.find(d=>d.fullName=='nodox.modules.svg.vector');
+        var document = service.createNewDocument();
+        var point1 = service.addNode(document,defPoint);
+        var point2 = service.addNode(document,defPoint);
+        var vector = service.addNode(document,defVector);
+        // var connection1 = service.connect(document, vector.inputs[0], point1.outputs[0]);
+        // var connection2 = service.connect(document, vector.inputs[1], point2.outputs[0]);
+        service.connect(document, vector.inputs[0], point1.outputs[0]);
+        service.connect(document, vector.inputs[1], point2.outputs[0]);
+        var json = service.getDocumentJson(document);
+        console.log(json);
+        expect(json.length).to.be.greaterThan(0);
+    })
+
 
     it('should contain a valid Module SvgExtra with 1 or more definitions', () => {
         var svgextra = new SvgExtra();
