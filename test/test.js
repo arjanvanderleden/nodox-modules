@@ -95,7 +95,6 @@ describe('#NodoxModules', function () {
         service.connect(document, vector.inputs[0], point1.outputs[0]);
         service.connect(document, vector.inputs[1], point2.outputs[0]);
         var json = service.getDocumentJson(document);
-        console.log(json);
         chai_1.expect(json.length).to.be.greaterThan(0);
     });
     it('should contain a valid Module SvgExtra with 1 or more definitions', function () {

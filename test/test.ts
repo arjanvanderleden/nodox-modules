@@ -103,7 +103,6 @@ describe('#NodoxModules', () => {
         service.connect(document, vector.inputs[0], point1.outputs[0]);
         service.connect(document, vector.inputs[1], point2.outputs[0]);
         var json = service.getDocumentJson(document);
-        console.log(json);
         expect(json.length).to.be.greaterThan(0);
     })
 
