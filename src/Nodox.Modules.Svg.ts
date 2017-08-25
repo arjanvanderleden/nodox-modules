@@ -1,10 +1,7 @@
 ﻿import { IRunningContext, INodoxModule, IDataType, INodeDefinition, IInputDescriptor, IOutputDescriptor, Point, NodeProcessingMode, NodeValues, IPoint } from 'nodox-core';
 import { NodoxModule } from "./Nodox.Modules.NodoxModule";
 import * as convert from "color-convert";
-const window   = require('svgdom')
 import * as SVG from 'svg.js';
-SVG(window)
-const document = window.document
 
 export interface ISvgRunningContext extends IRunningContext {
   svg: any;

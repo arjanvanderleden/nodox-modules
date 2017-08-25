@@ -2,10 +2,7 @@ import { ISvgRunningContext } from "./Nodox.Modules.Svg";
 import { INodeDefinition, IDataType, Point, IInputDescriptor, IOutputDescriptor, NodeValues } from "nodox-core";
 import { NodoxModule } from "./Nodox.Modules.NodoxModule";
 import * as convert from "color-convert";
-const window   = require('svgdom')
 import * as SVG from 'svg.js';
-SVG(window)
-const document = window.document
 
 export class SvgExtra extends NodoxModule {
     constructor() {
@@ -147,7 +144,6 @@ export class SvgExtra extends NodoxModule {
       }
 
       protected preprocess(context: ISvgRunningContext) {
-        SVG(window);
         context.svg = SVG(window.document.documentElement);      }
     }
 

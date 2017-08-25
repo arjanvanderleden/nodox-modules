@@ -13,7 +13,6 @@
     "build": "tsc",
     "precover": "npm run pretest",
     "cover": "node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -R spec test/*.js"
-
   },
   "repository": {
     "type": "git",
@@ -41,7 +40,6 @@
     "mocha": "^3.5.0",
     "nodox-core": "^0.1.3",
     "svg.js": "^2.6.3",
-    "svgdom": "0.0.15",
     "typescript": "^2.4.2"
   },
   "devDependencies": {

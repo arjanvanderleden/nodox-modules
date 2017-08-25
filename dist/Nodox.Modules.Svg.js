@@ -13,10 +13,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var nodox_core_1 = require("nodox-core");
 var Nodox_Modules_NodoxModule_1 = require("./Nodox.Modules.NodoxModule");
 var convert = require("color-convert");
-var window = require('svgdom');
 var SVG = require("svg.js");
-SVG(window);
-var document = window.document;
 var Svg = (function (_super) {
     __extends(Svg, _super);
     function Svg() {
