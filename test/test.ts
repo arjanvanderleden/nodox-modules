@@ -77,15 +77,15 @@ describe('#NodoxModules', () => {
         var point1 = service.addNode(document,defPoint);
         var point2 = service.addNode(document,defPoint);
         var vector = service.addNode(document,defVector);
-        expect(point1).to.be.a('object');
-        expect(point2).to.be.a('object');
-        expect(vector).to.be.a('object');
+        expect(point1,'point1').to.be.a('object');
+        expect(point2,'point2').to.be.a('object');
+        expect(vector,'vector').to.be.a('object');
         // var connection1 = service.connect(document, vector.inputs[0], point1.outputs[0]);
         // var connection2 = service.connect(document, vector.inputs[1], point2.outputs[0]);
         service.connect(document, vector.inputs[0], point1.outputs[0]);
         service.connect(document, vector.inputs[1], point2.outputs[0]);
-        expect(document.connections[0]).to.be.a('object');
-        expect(document.connections[1]).to.be.a('object');
+        expect(document.connections[0],'document.connections[0]').to.be.a('object');
+        expect(document.connections[1],'document.connections[1]').to.be.a('object');
     })
 
     it('After connecting two Points and one Vector, it should be serialized in a valid json string',()=>{

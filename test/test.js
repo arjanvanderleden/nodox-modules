@@ -70,15 +70,15 @@ describe('#NodoxModules', function () {
         var point1 = service.addNode(document, defPoint);
         var point2 = service.addNode(document, defPoint);
         var vector = service.addNode(document, defVector);
-        chai_1.expect(point1).to.be.a('object');
-        chai_1.expect(point2).to.be.a('object');
-        chai_1.expect(vector).to.be.a('object');
+        chai_1.expect(point1, 'point1').to.be.a('object');
+        chai_1.expect(point2, 'point2').to.be.a('object');
+        chai_1.expect(vector, 'vector').to.be.a('object');
         // var connection1 = service.connect(document, vector.inputs[0], point1.outputs[0]);
         // var connection2 = service.connect(document, vector.inputs[1], point2.outputs[0]);
         service.connect(document, vector.inputs[0], point1.outputs[0]);
         service.connect(document, vector.inputs[1], point2.outputs[0]);
-        chai_1.expect(document.connections[0]).to.be.a('object');
-        chai_1.expect(document.connections[1]).to.be.a('object');
+        chai_1.expect(document.connections[0], 'document.connections[0]').to.be.a('object');
+        chai_1.expect(document.connections[1], 'document.connections[1]').to.be.a('object');
     });
     it('After connecting two Points and one Vector, it should be serialized in a valid json string', function () {
         var svg = new dist_1.Svg();
