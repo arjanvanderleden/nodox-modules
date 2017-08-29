@@ -29,7 +29,7 @@
   "homepage": "https://github.com/arjanvanderleden/nodox-modules#readme",
   "dependencies": {
     "color-convert": "^1.9.0",
-    "nodox-core": "^0.1.6",
+    "nodox-core": "^0.1.7",
     "svg.js": "^2.6.3"
   },
   "devDependencies": {
