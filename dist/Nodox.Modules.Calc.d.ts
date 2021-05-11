@@ -1,7 +1,7 @@
-import { NodoxModule } from "./Nodox.Modules.NodoxModule";
-export declare class Calc extends NodoxModule {
+import { NodoxModuleBase } from "./Nodox.Modules.NodoxModule";
+export declare class Calc extends NodoxModuleBase {
     constructor();
-    private processSquare(context, result, inputParams, index);
-    private processSquareRoot(context, result, inputParams, index);
-    private processConstant(context, result, inputParams, index);
+    private processSquare;
+    private processSquareRoot;
+    private processConstant;
 }

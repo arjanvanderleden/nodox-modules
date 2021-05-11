@@ -1,10 +1,11 @@
 ﻿import { Svg, ISvgRunningContext } from './Nodox.Modules.Svg';
-import { INodoxModule, INodeDefinition, IOutputDescriptor, NodeValues, Point, IInputDescriptor } from 'nodox-core';
+import { NodoxModule, NodoxNodeDefinition, OutputDefinition, InputDefinition, Lookup } from 'nodox-core';
+import { Point } from './point';
 
 
 export class SvgGrids extends Svg {
 
-  merge(otherModule: INodoxModule): INodoxModule {
+  merge(otherModule: NodoxModule): NodoxModule {
     return super.merge(otherModule);
   }
 
@@ -12,13 +13,13 @@ export class SvgGrids extends Svg {
     super();
     this.name = "SvgGrids";
     this.description = "Grids for Svg";
-    this.definitions = <INodeDefinition[]>[
+    this.definitions = <NodoxNodeDefinition[]>[
       {
         name: "Hex Grid",
         description: "Creates an hexagonal grid of points",
         processFunction: this.processHexGrid,
         postprocessFunction: super.postprocessGrid,
-        inputs: <Array<IInputDescriptor>>[
+        inputs: [
           {
             name: "center",
             description: "position of center",
@@ -40,7 +41,7 @@ export class SvgGrids extends Svg {
             dataType: "nodox.modules.core.number",
             defaultValue: 0
           }],
-        outputs: <Array<IOutputDescriptor>>[{
+        outputs:[{
           name: "point",
           description: "An array of points",
           dataType: "nodox.modules.svg.point"
@@ -56,7 +57,7 @@ export class SvgGrids extends Svg {
   }
 
 
-  protected processHexGrid(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number) {
+  protected processHexGrid(context: ISvgRunningContext, result: Lookup<any>, inputParams: Lookup<any>, index: number) {
     result["point"] = result["point"] || new Array<any>();
 
     var center = inputParams["center"];

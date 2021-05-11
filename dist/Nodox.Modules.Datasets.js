@@ -1,25 +1,15 @@
 "use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Nodox_Modules_NodoxModule_1 = require("./Nodox.Modules.NodoxModule");
-var Datasets = (function (_super) {
-    __extends(Datasets, _super);
-    function Datasets() {
-        var _this = _super.call(this) || this;
-        _this.name = "Datasets";
-        _this.description = "Definitions to manipulate datasets in Nodox";
-        _this.namespace = "nodox.modules.datasets";
-        _this.dependencies = new Array();
-        _this.dataTypes = [
+exports.Datasets = void 0;
+const Nodox_Modules_NodoxModule_1 = require("./Nodox.Modules.NodoxModule");
+class Datasets extends Nodox_Modules_NodoxModule_1.NodoxModuleBase {
+    constructor() {
+        super();
+        this.name = "Datasets";
+        this.description = "Definitions to manipulate datasets in Nodox";
+        this.namespace = "nodox.modules.datasets";
+        this.dependencies = new Array();
+        this.dataTypes = [
             {
                 name: "number",
                 description: "javascript type nummber",
@@ -31,11 +21,11 @@ var Datasets = (function (_super) {
                 accepts: ["*"]
             }
         ];
-        _this.definitions = [
+        this.definitions = [
             {
                 name: "Load",
                 description: "loads a dataset",
-                processFunction: _this.processAdd,
+                processFunction: this.processAdd,
                 inputs: [
                     {
                         name: "name",
@@ -44,66 +34,64 @@ var Datasets = (function (_super) {
                     }
                 ],
                 outputs: [],
-                fullName: _this.namespace + ".min"
+                fullName: this.namespace + ".min"
             },
             {
                 name: "Join",
                 description: "Join two datasets",
-                processFunction: _this.processMax,
+                processFunction: this.processMax,
                 inputs: [],
                 outputs: [],
-                fullName: _this.namespace + ".join"
+                fullName: this.namespace + ".join"
             },
             {
                 name: "Map",
                 description: "Maps a dataset",
-                processFunction: _this.processMin,
+                processFunction: this.processMin,
                 inputs: [],
                 outputs: [],
-                fullName: _this.namespace + ".map"
+                fullName: this.namespace + ".map"
             },
             {
                 name: "Filter",
                 description: "Filters a dataset",
-                processFunction: _this.processMin,
+                processFunction: this.processMin,
                 inputs: [],
                 outputs: [],
-                fullName: _this.namespace + ".filter"
+                fullName: this.namespace + ".filter"
             },
             {
                 name: "Address lookup",
                 description: "Resolves addresses",
-                processFunction: _this.processMin,
+                processFunction: this.processMin,
                 inputs: [],
                 outputs: [],
-                fullName: _this.namespace + ".addressLookup"
+                fullName: this.namespace + ".addressLookup"
             },
             {
                 name: "Export",
                 description: "Exports a dataset",
-                processFunction: _this.processMin,
+                processFunction: this.processMin,
                 inputs: [],
                 outputs: [],
-                fullName: _this.namespace + ".export"
+                fullName: this.namespace + ".export"
             }
         ];
-        return _this;
     }
-    Datasets.prototype.processAdd = function (context, result, inputParams, index) {
-        var a = inputParams["a"];
-        var b = inputParams["b"];
+    processAdd(context, result, inputParams, index) {
+        const a = inputParams["a"];
+        const b = inputParams["b"];
         result["sum"].push(a + b);
-    };
-    Datasets.prototype.processMax = function (context, result, inputParams, index) {
-        var a = inputParams["a"];
-        var b = inputParams["b"];
+    }
+    processMax(context, result, inputParams, index) {
+        const a = inputParams["a"];
+        const b = inputParams["b"];
         result["sum"].push(a + b);
-    };
-    Datasets.prototype.processMin = function (context, result, inputParams, index) {
-        var a = inputParams["a"];
-        var b = inputParams["b"];
+    }
+    processMin(context, result, inputParams, index) {
+        const a = inputParams["a"];
+        const b = inputParams["b"];
         result["sum"].push(a + b);
-    };
-    return Datasets;
-}(Nodox_Modules_NodoxModule_1.NodoxModule));
+    }
+}
 exports.Datasets = Datasets;

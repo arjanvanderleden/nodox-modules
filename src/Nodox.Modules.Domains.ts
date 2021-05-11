@@ -1,7 +1,7 @@
-﻿import { NodeValues, IInputDescriptor, INodeDefinition, IDataType, IRunningContext, IOutputDescriptor } from "nodox-core";
-import { NodoxModule } from "./Nodox.Modules.NodoxModule";
+﻿import { NodeValues, InputDefinition, NodoxNodeDefinition, DataType, NodoxRunningContext, OutputDefinition, Lookup } from "nodox-core";
+import { NodoxModuleBase } from "./Nodox.Modules.NodoxModule";
 
-export class Domains extends NodoxModule {
+export class Domains extends NodoxModuleBase {
         constructor() {
             super();
             this.name = "Domains";
@@ -10,14 +10,14 @@ export class Domains extends NodoxModule {
             this.dependencies = [
                 "nodox.modules.core",
                 "nodox.modules.calc"];
-            this.dataTypes = <IDataType[]>[
+            this.dataTypes = <DataType[]>[
             ];
-            this.definitions = <INodeDefinition[]>[
+            this.definitions = <NodoxNodeDefinition[]>[
               {
                   name: "Range",
                   description: "Creates an array of numbers",
                   processFunction: this.processRange,
-                  inputs: <Array<IInputDescriptor>>[
+                  inputs: <Array<InputDefinition>>[
                       {
                           name: "from",
                           description: "From number",
@@ -36,7 +36,7 @@ export class Domains extends NodoxModule {
                           defaultValue: 0
                       }
                       ],
-                  outputs: <Array<IOutputDescriptor>>[{
+                  outputs: <Array<OutputDefinition>>[{
                       name: "value",
                       description: "An array of numbers",
                       dataType: "nodox.modules.core.number"
@@ -47,7 +47,7 @@ export class Domains extends NodoxModule {
                     name: "Linear",
                     description: "Calculates values in a range",
                     processFunction: this.processLinearDomain,
-                    inputs: <Array<IInputDescriptor>>[
+                    inputs: <Array<InputDefinition>>[
                         {
                             name: "fromStart",
                             description: "Second number",
@@ -77,7 +77,7 @@ export class Domains extends NodoxModule {
                             defaultValue: 0
                         }
                         ],
-                    outputs: <Array<IOutputDescriptor>>[{
+                    outputs: <Array<OutputDefinition>>[{
                         name: "value",
                         description: "The calculated value in teh output domain",
                         dataType: "nodox.modules.core.number"
@@ -89,7 +89,7 @@ export class Domains extends NodoxModule {
                     name: "Exponential",
                     description: "Calculates values in an exponential range",
                     processFunction: this.processExponentialDomain,
-                    inputs: <Array<IInputDescriptor>>[
+                    inputs: <Array<InputDefinition>>[
                         {
                             name: "fromStart",
                             description: "Second number",
@@ -119,7 +119,7 @@ export class Domains extends NodoxModule {
                             defaultValue: 0
                         }
                     ],
-                    outputs: <Array<IOutputDescriptor>>[{
+                    outputs: <Array<OutputDefinition>>[{
                         name: "value",
                         description: "the new value mapped in the new domain",
                         dataType: this.namespace + ".number"
@@ -131,35 +131,29 @@ export class Domains extends NodoxModule {
 
         }
 
-        private processLinearDomain(context: IRunningContext, result:NodeValues, inputParams: Object, index:number) {
+        private processLinearDomain(context: NodoxRunningContext, result:Lookup<any>, inputParams: Lookup<any>, index:number) {
           result["value"] = result["value"] || new Array<number>();
-          var a = +inputParams["fromStart"];
-          var b = +inputParams["fromEnd"];
-          var c = +inputParams["toStart"];
-          var d = +inputParams["toEnd"];
-          var value = +inputParams["value"];
+        const a = +inputParams["fromStart"];
+        const b = +inputParams["fromEnd"];
+        const c = +inputParams["toStart"];
+        const d = +inputParams["toEnd"];
+        const value = +inputParams["value"];
           result["value"].push(value * (d-c)/(b-a));
         }
 
-        private processExponentialDomain(context: IRunningContext, result:NodeValues, inputParams: Object, index:number) {
-          var a = inputParams["a"];
-          var b = inputParams["b"];
+        private processExponentialDomain(context: NodoxRunningContext, result:Lookup<any>, inputParams: Lookup<any>, index:number) {
+        const a = inputParams["a"];
+        const b = inputParams["b"];
           result["sum"].push( a + b );
         }
 
-        private processRange(context: IRunningContext, result:NodeValues, inputParams: Object, index:number) {
+        private processRange(context: NodoxRunningContext, result:Lookup<any>, inputParams: Lookup<any>, index:number) {
           result["value"] = result["value"] || new Array<number>();
-          var from = +inputParams["from"];
-          var to = +inputParams["to"];
-          var count = +inputParams["count"];
-          var v = 0;
-          var step = (to-from)/(count-1)
-          if (count>1){
-            for (var index = 0;index<count;index++){
-              result["value"].push(v);
-              v += step;
-            }
-          }
+            const from = +inputParams["from"];
+            const to = +inputParams["to"];
+            const count = +inputParams["count"];
+            const values = Array.from(new Array(count), (v,k: number) => from + k*(to-from)/(count-1));
+            result["value"].push(...values);
         }
 
     }

@@ -1,10 +1,17 @@
 import { ISvgRunningContext } from "./Nodox.Modules.Svg";
-import { INodeDefinition, IDataType, Point, IInputDescriptor, IOutputDescriptor, NodeValues } from "nodox-core";
-import { NodoxModule } from "./Nodox.Modules.NodoxModule";
-import * as convert from "color-convert";
-import * as SVG from 'svg.js';
+import { NodoxNodeDefinition, DataType, InputDefinition, OutputDefinition, Lookup } from "nodox-core";
+import { NodoxModuleBase } from "./Nodox.Modules.NodoxModule";
+import { Point } from "./point";
+declare namespace SVG {
+  const Color: any;
+  const Shape: any;
+  const Matrix: any;
+  const Element: any;
+  const G: any;
+}
 
-export class SvgExtra extends NodoxModule {
+
+export class SvgExtra extends NodoxModuleBase {
     constructor() {
       super();
       this.name = "SvgExtra";
@@ -12,15 +19,15 @@ export class SvgExtra extends NodoxModule {
         "nodox.modules.svg"
         ];
       this.namespace = "nodox.modules.svg";
-      this.dataTypes = <IDataType[]>[
+      this.dataTypes = <DataType[]>[
       ];
-      this.definitions = <INodeDefinition[]>[
+      this.definitions = <NodoxNodeDefinition[]>[
         {
           name: "Sun",
           description: "Create a point",
           processFunction: this.processSun,
           preprocessFunction: this.preprocess,
-          inputs: <Array<IInputDescriptor>>[
+          inputs: <Array<InputDefinition>>[
 
           {
             name: "center",
@@ -75,7 +82,7 @@ export class SvgExtra extends NodoxModule {
        }
 
             ],
-          outputs: <Array<IOutputDescriptor>>[{
+          outputs: <Array<OutputDefinition>>[{
             name: "sun",
             description: "The sun element",
             dataType: "nodox.modules.svg.element"
@@ -86,7 +93,7 @@ export class SvgExtra extends NodoxModule {
         ];
       }
 
-      private processSun(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index:number) {
+      private processSun(context: ISvgRunningContext, result: Lookup<any>, inputParams: Lookup<any>, index:number) {
         result["sun"] = result["sun"] || new Array<any>();
 
         var center = inputParams["center"];
@@ -144,6 +151,7 @@ export class SvgExtra extends NodoxModule {
       }
 
       protected preprocess(context: ISvgRunningContext) {
-        context.svg = SVG(window.document.documentElement);      }
+        context.svg = {} //SVG(window.document.documentElement);      }
     }
 
+  }

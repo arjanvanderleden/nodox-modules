@@ -1,19 +1,31 @@
-﻿import { IRunningContext, INodoxModule, IDataType, INodeDefinition, IInputDescriptor, IOutputDescriptor, Point, NodeProcessingMode, NodeValues, IPoint } from 'nodox-core';
-import { NodoxModule } from "./Nodox.Modules.NodoxModule";
-import * as convert from "color-convert";
-import * as SVG from 'svg.js';
+﻿import { NodoxRunningContext, NodoxModule, DataType, NodeProcessingMode, NodeValues, Lookup } from 'nodox-core';
+import { NodoxModuleBase } from "./Nodox.Modules.NodoxModule";
 
-export interface ISvgRunningContext extends IRunningContext {
+const convert = {hsv: {
+    rgb: (...args: any[]) => void (0)
+}};
+
+import { Point } from './point';
+declare namespace SVG {
+  const Color: any;
+  const Shape: any;
+  const Matrix: any;
+  const Element: any;
+  const G: any;
+}
+
+
+export interface ISvgRunningContext extends NodoxRunningContext {
   svg: any;
 }
 
-export class Svg extends NodoxModule {
+export class Svg extends NodoxModuleBase {
 
-  merge(otherModule: INodoxModule): INodoxModule {
+  merge(otherModule: NodoxModule): NodoxModule {
     return super.merge(otherModule);
   }
 
-  constructor() {    
+  constructor() {
     super();
     this.name = "Svg";
     this.description = "Definitions for creating svg elements";
@@ -24,7 +36,7 @@ export class Svg extends NodoxModule {
     this.cloneFunctions[this.namespace + ".element"] = (element: any) => {
       return (<any>element).clone();
     };
-    this.dataTypes = <IDataType[]>[
+    this.dataTypes = <DataType[]>[
       {
         name: "point",
         description: "Svg point",
@@ -39,13 +51,13 @@ export class Svg extends NodoxModule {
         accepts: []
       }
     ];
-    this.definitions = <INodeDefinition[]>[
+    this.definitions = [
       {
         name: "Point",
         description: "Create a point",
         processFunction: this.processPoint,
         preprocessFunction: this.preprocess,
-        inputs: <Array<IInputDescriptor>>[{
+        inputs:[{
           name: "x",
           description: "X value of point",
           dataType: "nodox.modules.core.number",
@@ -57,7 +69,7 @@ export class Svg extends NodoxModule {
           dataType: "nodox.modules.core.number",
           defaultValue: 0
         }],
-        outputs: <Array<IOutputDescriptor>>[{
+        outputs:[{
           name: "point",
           description: "Point",
           dataType: this.namespace + ".point"
@@ -70,7 +82,7 @@ export class Svg extends NodoxModule {
         description: "Create a color",
         processFunction: this.processColor,
         preprocessFunction: this.preprocess,
-        inputs: <Array<IInputDescriptor>>[{
+        inputs:[{
           name: "r",
           description: "Red value of color",
           dataType: "nodox.modules.core.number",
@@ -87,7 +99,7 @@ export class Svg extends NodoxModule {
           dataType: "nodox.modules.core.number",
           defaultValue: 0
         }],
-        outputs: <Array<IOutputDescriptor>>[{
+        outputs:[{
           name: "color",
           description: "The generated color",
           dataType: this.namespace + ".color"
@@ -101,7 +113,7 @@ export class Svg extends NodoxModule {
         description: "Create a color with HSV values",
         processFunction: this.processHsvColor,
         preprocessFunction: this.preprocess,
-        inputs: <Array<IInputDescriptor>>[{
+        inputs:[{
           name: "h",
           description: "Hue value of color",
           dataType: "nodox.modules.core.number",
@@ -118,7 +130,7 @@ export class Svg extends NodoxModule {
           dataType: "nodox.modules.core.number",
           defaultValue: 0
         }],
-        outputs: <Array<IOutputDescriptor>>[{
+        outputs:[{
           name: "color",
           description: "The generated color",
           dataType: this.namespace + ".color"
@@ -131,7 +143,7 @@ export class Svg extends NodoxModule {
         description: "Delta of two points",
         processFunction: this.processDeltaPoint,
         preprocessFunction: this.preprocess,
-        inputs: <Array<IInputDescriptor>>[
+        inputs:[
           {
             name: "first",
             description: "First point",
@@ -145,7 +157,7 @@ export class Svg extends NodoxModule {
             defaultValue: new Point(0, 0)
           }
         ],
-        outputs: <Array<IOutputDescriptor>>[
+        outputs:[
           {
             name: "distance",
             description: "Distance between the points",
@@ -169,9 +181,9 @@ export class Svg extends NodoxModule {
       {
         name: "Circle",
         description: "Create a circle",
-        processFunction: this.processCircle,
-        preprocessFunction: this.preprocess,
-        inputs: <Array<IInputDescriptor>>[{
+        processFunction: this.processCircle as any,
+        preprocessFunction: this.preprocess as any,
+        inputs:[{
           name: "center",
           description: "Center of circle",
           dataType: this.namespace + ".point",
@@ -183,7 +195,7 @@ export class Svg extends NodoxModule {
           dataType: "nodox.modules.core.number",
           defaultValue: 10
         }],
-        outputs: <Array<IOutputDescriptor>>[{
+        outputs:[{
           name: "circle",
           description: "The circle element",
           dataType: this.namespace + ".element"
@@ -194,9 +206,9 @@ export class Svg extends NodoxModule {
       {
         name: "Rectangle",
         description: "Create a rectangle",
-        processFunction: this.processRectangle,
-        preprocessFunction: this.preprocess,
-        inputs: <Array<IInputDescriptor>>[{
+        processFunction: this.processRectangle as any,
+        preprocessFunction: this.preprocess as any,
+        inputs:[{
           name: "point",
           description: "First point for rectangle",
           dataType: this.namespace + ".point",
@@ -214,7 +226,7 @@ export class Svg extends NodoxModule {
           dataType: "nodox.modules.core.number",
           defaultValue: 10
         }],
-        outputs: <Array<IOutputDescriptor>>[
+        outputs:[
           {
             name: "rectangle",
             description: "The rectangle element",
@@ -228,7 +240,7 @@ export class Svg extends NodoxModule {
         description: "Creates an array of points",
         processFunction: this.processGrid,
         postprocessFunction: this.postprocessGrid,
-        inputs: <Array<IInputDescriptor>>[
+        inputs:[
           {
             name: "position",
             description: "position of center",
@@ -257,7 +269,7 @@ export class Svg extends NodoxModule {
             defaultValue: 0
           }
         ],
-        outputs: <Array<IOutputDescriptor>>[{
+        outputs:[{
           name: "point",
           description: "An array of points",
           dataType: "nodox.modules.svg.point"
@@ -272,9 +284,9 @@ export class Svg extends NodoxModule {
       {
         name: "Radial Grid",
         description: "Creates an circular array of points",
-        processFunction: this.processRadialGrid,
-        postprocessFunction: this.postprocessGrid,
-        inputs: <Array<IInputDescriptor>>[
+        processFunction: this.processRadialGrid as any,
+        postprocessFunction: this.postprocessGrid as any,
+        inputs:[
           {
             name: "center",
             description: "position of center",
@@ -291,7 +303,7 @@ export class Svg extends NodoxModule {
             dataType: "nodox.modules.core.number",
             defaultValue: 0
           }],
-        outputs: <Array<IOutputDescriptor>>[
+        outputs:[
           {
             name: "point",
             description: "An array of points",
@@ -318,18 +330,19 @@ export class Svg extends NodoxModule {
       {
         name: "ellipse",
         description: "create an ellipse",
-        processFunction: this.processCircle,
-        preprocessFunction: this.preprocess,
-        inputs: <Array<IInputDescriptor>>[],
-        outputs: <Array<IOutputDescriptor>>[],
-        fullName: this.namespace + ".ellipse"
+        processFunction: this.processCircle as any,
+        preprocessFunction: this.preprocess as any,
+        inputs:[],
+        outputs:[],
+        fullName: this.namespace + ".ellipse",
+        icon: "nodox:svg_ellipse",
       },
       {
         name: "polygon",
         description: "create a polygon",
-        processFunction: this.processPolygon,
-        preprocessFunction: this.preprocess,
-        inputs: <Array<IInputDescriptor>>[
+        processFunction: this.processPolygon as any,
+        preprocessFunction: this.preprocess as any,
+        inputs:[
 
           {
             name: "center",
@@ -349,27 +362,24 @@ export class Svg extends NodoxModule {
           },
           {
             name: "starShaped",
-            label: "Star shaped",
             description: "Convex",
             dataType: "nodox.modules.core.boolean",
             defaultValue: false
           },
           {
             name: "useInnerRadius",
-            label: "Use inner radius",
             description: "Convex",
             dataType: "nodox.modules.core.boolean",
             defaultValue: false
           }, {
             name: "innerRadius",
-            label: "inner Radius",
             description: "inner radius",
             dataType: "nodox.modules.core.number",
             defaultValue: 0
           }
 
         ],
-        outputs: <Array<IOutputDescriptor>>[
+        outputs:[
 
           {
             name: "polygon",
@@ -386,17 +396,17 @@ export class Svg extends NodoxModule {
         description: "create text",
         processFunction: this.processCircle,
         preprocessFunction: this.preprocess,
-        inputs: <Array<IInputDescriptor>>[],
-        outputs: <Array<IOutputDescriptor>>[],
+        inputs:[],
+        outputs:[],
         fullName: this.namespace + ".text",
         icon: "nodox:svg_text",
       },
       {
         name: "set fill",
         description: "fill element",
-        processFunction: this.processSetFill,
-        preprocessFunction: this.preprocess,
-        inputs: <Array<IInputDescriptor>>[
+        processFunction: this.processSetFill as any,
+        preprocessFunction: this.preprocess as any,
+        inputs:[
           {
             name: "element",
             description: "The element",
@@ -414,7 +424,7 @@ export class Svg extends NodoxModule {
             defaultValue: 1
           }
         ],
-        outputs: <Array<IOutputDescriptor>>[
+        outputs:[
           {
             name: "element",
             description: "The stroked element",
@@ -427,9 +437,9 @@ export class Svg extends NodoxModule {
       {
         name: "set stroke",
         description: "set a stroke on the element",
-        processFunction: this.processSetStroke,
-        preprocessFunction: this.preprocess,
-        inputs: <Array<IInputDescriptor>>[
+        processFunction: this.processSetStroke as any,
+        preprocessFunction: this.preprocess as any,
+        inputs:[
           {
             name: "element",
             description: "The element to be stroked",
@@ -447,7 +457,7 @@ export class Svg extends NodoxModule {
             defaultValue: 0
           }
         ],
-        outputs: <Array<IOutputDescriptor>>[
+        outputs:[
           {
             name: "element",
             description: "The stroked element",
@@ -460,16 +470,16 @@ export class Svg extends NodoxModule {
       {
         name: "group",
         description: "group elements",
-        processFunction: this.processGroup,
-        preprocessFunction: this.preprocess,
-        postprocessFunction: this.postprocessGroup,
-        inputs: <Array<IInputDescriptor>>[{
+        processFunction: this.processGroup as any,
+        preprocessFunction: this.preprocess as any,
+        postprocessFunction: this.postprocessGroup as any,
+        inputs:[{
           name: "element",
           description: "The element(s) to be grouped",
           dataType: this.namespace + ".element",
           defaultValue: null
         },],
-        outputs: <Array<IOutputDescriptor>>[{
+        outputs:[{
           name: "element",
           description: "The group element",
           dataType: this.namespace + ".element"
@@ -480,11 +490,11 @@ export class Svg extends NodoxModule {
       {
         name: "combine",
         description: "combine elements",
-        processFunction: this.processCombine,
-        preprocessFunction: this.preprocess,
-        postprocessFunction: this.postprocessCombine,
-        processingMode: NodeProcessingMode.AddNull,
-        inputs: <Array<IInputDescriptor>>[{
+        processFunction: this.processCombine as any,
+        preprocessFunction: this.preprocess as any,
+        postprocessFunction: this.postprocessCombine as any,
+        processingMode: NodeProcessingMode.addEmpty,
+        inputs:[{
           name: "firstElement",
           description: "The first element (bottom)",
           dataType: this.namespace + ".element",
@@ -515,12 +525,11 @@ export class Svg extends NodoxModule {
         },
         {
           name: "groupElements",
-          label: "Create group",
           description: "Convex",
           dataType: "nodox.modules.core.boolean",
           defaultValue: true
         }],
-        outputs: <Array<IOutputDescriptor>>[{
+        outputs:[{
           name: "element",
           description: "The resulting element (or elements if not grouped)",
           dataType: this.namespace + ".element"
@@ -531,10 +540,10 @@ export class Svg extends NodoxModule {
       {
         name: "translate",
         description: "translates an element",
-        processFunction: this.processTranslate,
-        preprocessFunction: this.preprocess,
+        processFunction: this.processTranslate as any,
+        preprocessFunction: this.preprocess as any,
         icon: "nodox:svg_translate",
-        inputs: <Array<IInputDescriptor>>[
+        inputs:[
           {
             name: "element",
             description: "The element to be translated",
@@ -552,7 +561,7 @@ export class Svg extends NodoxModule {
             defaultValue: 0
           }
         ],
-        outputs: <Array<IOutputDescriptor>>[
+        outputs:[
           {
             name: "element",
             description: "The translated element",
@@ -564,10 +573,10 @@ export class Svg extends NodoxModule {
       {
         name: "scale",
         description: "Scale an element",
-        processFunction: this.processScale,
-        preprocessFunction: this.preprocess,
+        processFunction: this.processScale as any,
+        preprocessFunction: this.preprocess as any,
         icon: "nodox:svg_scale",
-        inputs: <Array<IInputDescriptor>>[
+        inputs:[
           {
             name: "element",
             description: "The element to be rotated",
@@ -586,7 +595,7 @@ export class Svg extends NodoxModule {
             defaultValue: 10
           }
         ],
-        outputs: <Array<IOutputDescriptor>>[{
+        outputs:[{
           name: "element",
           description: "The rotated element",
           dataType: this.namespace + ".element"
@@ -595,10 +604,10 @@ export class Svg extends NodoxModule {
       {
         name: "rotate",
         description: "rotates ",
-        processFunction: this.processRotate,
-        preprocessFunction: this.preprocess,
+        processFunction: this.processRotate as any,
+        preprocessFunction: this.preprocess as any,
         icon: "nodox:svg_rotate",
-        inputs: <Array<IInputDescriptor>>[
+        inputs:[
           {
             name: "element",
             description: "The element to be rotated",
@@ -617,7 +626,7 @@ export class Svg extends NodoxModule {
             defaultValue: 10
           }
         ],
-        outputs: <Array<IOutputDescriptor>>[{
+        outputs:[{
           name: "element",
           description: "The rotated element",
           dataType: this.namespace + ".element"
@@ -627,17 +636,18 @@ export class Svg extends NodoxModule {
       {
         name: "matrix transform",
         description: "create a circle",
-        processFunction: this.processCircle,
-        preprocessFunction: this.preprocess,
-        inputs: <Array<IInputDescriptor>>[],
-        outputs: <Array<IOutputDescriptor>>[],
-        fullName: this.namespace + ".matrix"
+        processFunction: this.processCircle as any,
+        preprocessFunction: this.preprocess as any,
+        inputs: [],
+        outputs: [],
+        fullName: this.namespace + ".matrix",
+        icon: "nodox:svg_matrix",
       }
 
     ];
   }
 
-  protected processColor(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number) {
+  protected processColor(context: ISvgRunningContext, result: Lookup<any>, inputParams: Lookup<any>, index: number) {
     result["color"] = result["color"] || new Array<any>();
     var r = Math.min(Math.max(+inputParams["r"], 0), 1) * 255;
     var g = Math.min(Math.max(+inputParams["g"], 0), 1) * 255;
@@ -645,30 +655,30 @@ export class Svg extends NodoxModule {
     result["color"].push(new SVG.Color({r:r,g:g,b:b}));
   }
 
-  protected processHsvColor(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number) {
+  protected processHsvColor(context: ISvgRunningContext, result: Lookup<any>, inputParams: Lookup<any>, index: number) {
     result["color"] = result["color"] || new Array<any>();
     var h = Math.min(Math.max(+inputParams["h"], 0), 1);
     var s = Math.min(Math.max(+inputParams["s"], 0), 1);
     var v = Math.min(Math.max(+inputParams["v"], 0), 1);
-    var color = convert.hsv.rgb([h,s,v]);
-    result["color"].push(new SVG.Color({r:color[0],g:color[1],b:color[2]}));
+    var [r,g,b] = convert.hsv.rgb([h,s,v]) || [1,2,3];
+    result["color"].push(new SVG.Color({r,g, b}));
   }
 
-  protected processPoint(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number) {
+  protected processPoint(context: ISvgRunningContext, result: Lookup<any>, inputParams: Lookup<any>, index: number) {
     result["point"] = result["point"] || new Array<any>();
     var x = inputParams["x"];
     var y = inputParams["y"];
     result["point"].push({ x: x, y: y });
   }
 
-  protected processCircle(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number) {
+  protected processCircle(context: ISvgRunningContext, result: Lookup<any>, inputParams: Lookup<any>, index: number) {
     result["circle"] = result["circle"] || new Array<any>();
     var point = inputParams["center"];
     var radius = +inputParams["radius"];
     result["circle"].push(context.svg.circle(radius).move(point.x, point.y));
   }
 
-  protected processRectangle(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number) {
+  protected processRectangle(context: ISvgRunningContext, result: Lookup<any>, inputParams: Lookup<any>, index: number) {
     result["rectangle"] = result["rectangle"] || new Array<any>();
     var point = inputParams["point"];
     var width = +inputParams["width"];
@@ -679,10 +689,10 @@ export class Svg extends NodoxModule {
     if (!isNaN(radius)) rect.radius(radius);
     result["rectangle"].push(rect);
   }
-  protected processDeltaPoint(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number) {
+  protected processDeltaPoint(context: ISvgRunningContext, result: Lookup<any>, inputParams: Lookup<any>, index: number) {
     result["distance"] = result["distance"] || new Array<number>();
     result["angle"] = result["angle"] || new Array<number>();
-    result["vector"] = result["vector"] || new Array<IPoint>();
+    result["vector"] = result["vector"] || new Array<Point>();
     var first = new Point(inputParams["first"].x, inputParams["first"].y);
     var second = new Point(inputParams["second"].x, inputParams["second"].y);
     var vector = first.subtract(second);
@@ -691,7 +701,7 @@ export class Svg extends NodoxModule {
     result["angle"].push(Math.atan2(vector.y, vector.x) / Math.PI / 2 + 0.5);
   }
 
-  protected processEllipse(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number) {
+  protected processEllipse(context: ISvgRunningContext, result: Lookup<any>, inputParams: Lookup<any>, index: number) {
     var width = +inputParams["width"];
     var height = +inputParams["height"];
     var ellipse = context.svg.ellipse(width,height);
@@ -700,7 +710,7 @@ export class Svg extends NodoxModule {
 
   // number
   // center : point
-  protected processPolygon(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number) {
+  protected processPolygon(context: ISvgRunningContext, result: Lookup<any>, inputParams: Lookup<any>, index: number) {
     result["polygon"] = result["polygon"] || new Array<any>();
 
     var center = inputParams["center"];
@@ -722,7 +732,7 @@ export class Svg extends NodoxModule {
       var y = +center.y + Math.sin(2 * c * Math.PI / count) * radius;
       points.push(new Point(x, y));
     }
-    //starshaped polygons hae multiple subpaths
+    //starshaped polygons have multiple subpaths
     var pointsAdded = 0;
     var newPath = true;
     while (pointsAdded < count) {
@@ -733,7 +743,7 @@ export class Svg extends NodoxModule {
       }
       pathString += (newPath) ? "M" + points[index].x + "," + points[index].y : " L " + points[index].x + "," + points[index].y;
       newPath = false;
-      points[index] = null;
+      delete points[index];
       index = (index + indexStep) % count;
       pointsAdded++;
     }
@@ -742,15 +752,15 @@ export class Svg extends NodoxModule {
     result["polygon"].push(context.svg.path(pathString));
   }
 
-  protected processText(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number) {
+  protected processText(context: ISvgRunningContext, result: Lookup<any>, inputParams: Lookup<any>, index: number) {
     var text = "" + inputParams["text"];
     result["sum"].push(context.svg.text(text));
   }
 
-  protected processSetStroke(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number) {
+  protected processSetStroke(context: ISvgRunningContext, result: Lookup<any>, inputParams: Lookup<any>, index: number) {
     result["element"] = result["element"] || new Array<any>();
-    var element = <SVG.Shape> inputParams["element"];
-    var color = <SVG.Color> inputParams["color"];
+    var element = inputParams["element"];
+    var color = inputParams["color"];
     var width = +inputParams["width"];
     if (element && element.attr) {
       element.attr({ stroke: color.toHex() , strokeWidth: width })
@@ -758,10 +768,10 @@ export class Svg extends NodoxModule {
     result["element"].push(element);
   }
 
-  protected processSetFill(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number) {
+  protected processSetFill(context: ISvgRunningContext, result: Lookup<any>, inputParams: Lookup<any>, index: number) {
     result["element"] = result["element"] || new Array<any>();
-    var element = <SVG.Shape>inputParams["element"];
-    var color = <SVG.Color>inputParams["color"];
+    var element = inputParams["element"];
+    var color = inputParams["color"];
     var opacity = +inputParams["opacity"];
     opacity = Math.max(0, Math.min(1, opacity));
     if (element && element.attr) {
@@ -773,21 +783,21 @@ export class Svg extends NodoxModule {
     result["element"].push(element);
   }
 
-  protected processGroup(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number) {
-    var gElement : SVG.G = (<any>context).groupElement = (<any>context).groupElement || context.svg.group();
+  protected processGroup(context: ISvgRunningContext, result: Lookup<any>, inputParams: Lookup<any>, index: number) {
+    var gElement = (<any>context).groupElement = (<any>context).groupElement || context.svg.group();
     var element = inputParams["element"];
     if (element) {
       gElement.add(element);
     }
   }
 
-  protected postprocessGroup(context: ISvgRunningContext, nodeValues: NodeValues) {
+  protected postprocessGroup(context: ISvgRunningContext, nodeValues: NodeValues<any>) {
     nodeValues.values["element"] = nodeValues.values["element"] || new Array<any>();
     nodeValues.values["element"].push((<any>context).groupElement);
     (<any>context).groupElement = null;
   }
 
-  protected processCombine(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number) {
+  protected processCombine(context: ISvgRunningContext, result: Lookup<any>, inputParams: Lookup<any>, index: number) {
     var firstElement = inputParams["firstElement"];
     var secondEement = inputParams["secondElement"];
     var thirdElement = inputParams["thirdElement"];
@@ -810,31 +820,31 @@ export class Svg extends NodoxModule {
     if (fifthElement) (<any>context).collectedElements.fifthElements.push(fifthElement);
   }
 
-  protected postprocessCombine(context: ISvgRunningContext, nodeValues: NodeValues) {
+  protected postprocessCombine(context: ISvgRunningContext, nodeValues: NodeValues<any>) {
     nodeValues.values["element"] = nodeValues.values["element"] || new Array<any>();
 
     if ((<any>context).groupElement) {
       // all elements are grouped in the only output element
       nodeValues.values["element"].push((<any>context).groupElement);
-      (<any>context).collectedElements.firstElements.forEach(elem => { (<any>context).groupElement.add(elem) });
-      (<any>context).collectedElements.secondElements.forEach(elem => { (<any>context).groupElement.add(elem) });
-      (<any>context).collectedElements.thirdElements.forEach(elem => { (<any>context).groupElement.add(elem) });
-      (<any>context).collectedElements.fourthElements.forEach(elem => { (<any>context).groupElement.add(elem) });
-      (<any>context).collectedElements.fifthElements.forEach(elem => { (<any>context).groupElement.add(elem) });
+      (<any>context).collectedElements.firstElements.forEach((elem: any) => { (<any>context).groupElement.add(elem) });
+      (<any>context).collectedElements.secondElements.forEach((elem: any) => { (<any>context).groupElement.add(elem) });
+      (<any>context).collectedElements.thirdElements.forEach((elem: any) => { (<any>context).groupElement.add(elem) });
+      (<any>context).collectedElements.fourthElements.forEach((elem: any) => { (<any>context).groupElement.add(elem) });
+      (<any>context).collectedElements.fifthElements.forEach((elem: any) => { (<any>context).groupElement.add(elem) });
       (<any>context).groupElement = null;
     } else {
       // all elements are output
-      (<any>context).collectedElements.firstElements.forEach(elem => { nodeValues.values["element"].push(elem) });
-      (<any>context).collectedElements.secondElements.forEach(elem => { nodeValues.values["element"].push(elem) });
-      (<any>context).collectedElements.thirdElements.forEach(elem => { nodeValues.values["element"].push(elem) });
-      (<any>context).collectedElements.fourthElements.forEach(elem => { nodeValues.values["element"].push(elem) });
-      (<any>context).collectedElements.fifthElements.forEach(elem => { nodeValues.values["element"].push(elem) });
+      (<any>context).collectedElements.firstElements.forEach((elem: any) => { nodeValues.values["element"].push(elem) });
+      (<any>context).collectedElements.secondElements.forEach((elem: any) => { nodeValues.values["element"].push(elem) });
+      (<any>context).collectedElements.thirdElements.forEach((elem: any) => { nodeValues.values["element"].push(elem) });
+      (<any>context).collectedElements.fourthElements.forEach((elem: any) => { nodeValues.values["element"].push(elem) });
+      (<any>context).collectedElements.fifthElements.forEach((elem: any) => { nodeValues.values["element"].push(elem) });
     }
     (<any>context).collectedElements = null;
 
   }
 
-  protected applyMatrix(element:SVG.Element, matrix : SVG.Matrix){
+  protected applyMatrix(element: any, matrix: any){
     element.transform({
       a:matrix.a,
       b:matrix.a,
@@ -848,10 +858,10 @@ export class Svg extends NodoxModule {
   //input svg element
   //input matrix abcd ef
   //input svg element
-  protected processTransform(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number) {
+  protected processTransform(context: ISvgRunningContext, result: Lookup<any>, inputParams: Lookup<any>, index: number) {
     result["element"] = result["element"] || new Array<any>();
-    var element = <SVG.Element>inputParams["element"];
-    
+    var element = inputParams["element"];
+
     var a = +inputParams["a"];
     var b = +inputParams["b"];
     var c = +inputParams["c"];
@@ -859,7 +869,7 @@ export class Svg extends NodoxModule {
     var e = +inputParams["e"];
     var f = +inputParams["f"];
 
-    var matrix = new SVG.Matrix({a:a,b:b,c:c,d:d,e:e,f:f});    
+    var matrix = new SVG.Matrix({a:a,b:b,c:c,d:d,e:e,f:f});
     this.applyMatrix(element, matrix);
     result["element"].push(element);
   }
@@ -869,9 +879,9 @@ export class Svg extends NodoxModule {
   //input rotation angle
   //input rotation point
   //ouput svg element
-  protected processRotate(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number) {
+  protected processRotate(context: ISvgRunningContext, result: Lookup<any>, inputParams: Lookup<any>, index: number) {
     result["element"] = result["element"] || new Array<any>();
-    var element = <SVG.Element> inputParams["element"];
+    var element = inputParams["element"];
     var point = inputParams["center"];
     if (!point) {
       var bbox = element.bbox();
@@ -890,10 +900,10 @@ export class Svg extends NodoxModule {
   //input scale factor
   //input scale origin point
   //ouput svg element
-  protected processScale(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number) {
+  protected processScale(context: ISvgRunningContext, result: Lookup<any>, inputParams: Lookup<any>, index: number) {
     result["element"] = result["element"] || new Array<any>();
-    var element = <SVG.Element>inputParams["element"];
-    var point = <IPoint> inputParams["center"];
+    var element = inputParams["element"];
+    var point = <Point> inputParams["center"];
     var factor = +inputParams["factor"];
 
     var matrix = new SVG.Matrix(element);
@@ -906,7 +916,7 @@ export class Svg extends NodoxModule {
   //input dx
   //input dy
   //ouput svg element
-  protected processTranslate(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number) {
+  protected processTranslate(context: ISvgRunningContext, result: Lookup<any>, inputParams: Lookup<any>, index: number) {
     result["element"] = result["element"] || new Array<any>()
 
     var element = inputParams["element"];
@@ -921,7 +931,7 @@ export class Svg extends NodoxModule {
   //output pattern
   //output patternName
   //output svg element
-  protected processCreatePattern(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number) {
+  protected processCreatePattern(context: ISvgRunningContext, result: Lookup<any>, inputParams: Lookup<any>, index: number) {
     result["element"] = result["element"] || new Array<any>();
     var element = inputParams["element"];
     result["element"].push(element);
@@ -930,14 +940,14 @@ export class Svg extends NodoxModule {
 
   //input patternName
   //input svg element
-  protected processSetPattern(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number) {
+  protected processSetPattern(context: ISvgRunningContext, result: Lookup<any>, inputParams: Lookup<any>, index: number) {
     result["element"] = result["element"] || new Array<any>();
     var element = inputParams["element"];
     result["element"].push(element);
   }
 
 
-  protected processRadialGrid(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number) {
+  protected processRadialGrid(context: ISvgRunningContext, result: Lookup<any>, inputParams: Lookup<any>, index: number) {
     result["point"] = result["point"] || new Array<any>();
     result["x"] = result["x"] || new Array<number>();
     result["y"] = result["y"] || new Array<number>();
@@ -955,7 +965,7 @@ export class Svg extends NodoxModule {
   }
 
 
-  protected processGrid(context: ISvgRunningContext, result: NodeValues, inputParams: Object, index: number) {
+  protected processGrid(context: ISvgRunningContext, result: Lookup<any>, inputParams: Lookup<any>, index: number) {
     result["point"] = result["point"] || new Array<any>();
     var position = inputParams["position"];
     var columns = +inputParams["columns"];
@@ -971,7 +981,7 @@ export class Svg extends NodoxModule {
     }
   }
 
-  protected postprocessGrid(context: ISvgRunningContext, nodeValues: NodeValues) {
+  protected postprocessGrid(context: ISvgRunningContext, nodeValues: NodeValues<any>) {
     nodeValues.keyNames.push("count");
     nodeValues.values["count"] = nodeValues.values["count"] || new Array<number>();
     nodeValues.values["point"] = nodeValues.values["point"] || new Array<any>();
@@ -980,8 +990,10 @@ export class Svg extends NodoxModule {
 
 
   protected preprocess(context: ISvgRunningContext) {
-    context.svg = SVG(document.documentElement);
-    
+    context.svg = {
+
+    }
+
   }
 
 }

@@ -1,24 +1,29 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var NodoxModule = (function () {
-    function NodoxModule() {
+exports.NodoxModuleBase = void 0;
+class NodoxModuleBase {
+    constructor() {
+        this.name = '';
+        this.description = '';
+        this.namespace = '';
+        this.dependencies = [];
+        this.dataTypes = [];
+        this.definitions = [];
         this.cloneFunctions = {};
     }
-    NodoxModule.prototype.merge = function (otherModule) {
-        var _this = this;
-        otherModule.definitions.forEach(function (newDefinition) {
-            if (_this.definitions.findIndex(function (def) { return def.fullName === newDefinition.fullName; }) == -1) {
-                _this.definitions.push(newDefinition);
+    merge(otherModule) {
+        otherModule.definitions.forEach(newDefinition => {
+            if (this.definitions.find(def => def.fullName === newDefinition.fullName)) {
+                this.definitions.push(newDefinition);
             }
             else {
-                console.warn("This module %o, already has a definition with fullname %o", _this.name, newDefinition.fullName);
+                console.warn("This module %o, already has a definition with fullname %o", this.name, newDefinition.fullName);
             }
         });
         return this;
-    };
-    return NodoxModule;
-}());
-exports.NodoxModule = NodoxModule;
+    }
+}
+exports.NodoxModuleBase = NodoxModuleBase;
 /*
 export class XXX extends NodoxModule {
   constructor() {
@@ -29,21 +34,21 @@ export class XXX extends NodoxModule {
     this.dependencies = [
       "nodox.modules.core",
       "nodox.modules.Calc"];
-    this.dataTypes = <IDataType[]>[
+    this.dataTypes = <DataType[]>[
       {
         name: "dtXXX",
         description: "<description>",
         accepts: []
       }
     ];
-    this.definitions = <INodeDefinition[]>[
+    this.definitions = <NodoxNodeDefinition[]>[
       {
         name: "deXXX",
         description: "<description>",
         processFunction: ()=>{},
         preprocessFunction: (context: IRunningContext) => {},
         postprocessFunction: (context: IRunningContext) => {},
-        inputs: <Array<IInputDescriptor>>[
+        inputs: <Array<InputDefinition>>[
           {
             name: "inputXXX",
             description: "<description>",
@@ -51,7 +56,7 @@ export class XXX extends NodoxModule {
             defaultValue: 0
           }
         ],
-        outputs: <Array<IOutputDescriptor>>[
+        outputs: <Array<OutputDefinition>>[
           {
             name: "outputXXX",
             description: "<description>",

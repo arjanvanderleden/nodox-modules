@@ -1,7 +1,7 @@
 import { ISvgRunningContext } from "./Nodox.Modules.Svg";
-import { NodoxModule } from "./Nodox.Modules.NodoxModule";
-export declare class SvgExtra extends NodoxModule {
+import { NodoxModuleBase } from "./Nodox.Modules.NodoxModule";
+export declare class SvgExtra extends NodoxModuleBase {
     constructor();
-    private processSun(context, result, inputParams, index);
+    private processSun;
     protected preprocess(context: ISvgRunningContext): void;
 }

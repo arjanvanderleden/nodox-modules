@@ -1,34 +1,29 @@
 "use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 Object.defineProperty(exports, "__esModule", { value: true });
-var nodox_core_1 = require("nodox-core");
-var Nodox_Modules_NodoxModule_1 = require("./Nodox.Modules.NodoxModule");
-var convert = require("color-convert");
-var SVG = require("svg.js");
-var Svg = (function (_super) {
-    __extends(Svg, _super);
-    function Svg() {
-        var _this = _super.call(this) || this;
-        _this.name = "Svg";
-        _this.description = "Definitions for creating svg elements";
-        _this.namespace = "nodox.modules.svg";
-        _this.dependencies = [
+exports.Svg = void 0;
+const nodox_core_1 = require("nodox-core");
+const Nodox_Modules_NodoxModule_1 = require("./Nodox.Modules.NodoxModule");
+const convert = { hsv: {
+        rgb: (...args) => void (0)
+    } };
+const point_1 = require("./point");
+class Svg extends Nodox_Modules_NodoxModule_1.NodoxModuleBase {
+    merge(otherModule) {
+        return super.merge(otherModule);
+    }
+    constructor() {
+        super();
+        this.name = "Svg";
+        this.description = "Definitions for creating svg elements";
+        this.namespace = "nodox.modules.svg";
+        this.dependencies = [
             "nodox.modules.core",
             "nodox.modules.math"
         ];
-        _this.cloneFunctions[_this.namespace + ".element"] = function (element) {
+        this.cloneFunctions[this.namespace + ".element"] = (element) => {
             return element.clone();
         };
-        _this.dataTypes = [
+        this.dataTypes = [
             {
                 name: "point",
                 description: "Svg point",
@@ -43,12 +38,12 @@ var Svg = (function (_super) {
                 accepts: []
             }
         ];
-        _this.definitions = [
+        this.definitions = [
             {
                 name: "Point",
                 description: "Create a point",
-                processFunction: _this.processPoint,
-                preprocessFunction: _this.preprocess,
+                processFunction: this.processPoint,
+                preprocessFunction: this.preprocess,
                 inputs: [{
                         name: "x",
                         description: "X value of point",
@@ -64,16 +59,16 @@ var Svg = (function (_super) {
                 outputs: [{
                         name: "point",
                         description: "Point",
-                        dataType: _this.namespace + ".point"
+                        dataType: this.namespace + ".point"
                     }],
                 icon: "nodox:svg_point",
-                fullName: _this.namespace + ".point"
+                fullName: this.namespace + ".point"
             },
             {
                 name: "Color",
                 description: "Create a color",
-                processFunction: _this.processColor,
-                preprocessFunction: _this.preprocess,
+                processFunction: this.processColor,
+                preprocessFunction: this.preprocess,
                 inputs: [{
                         name: "r",
                         description: "Red value of color",
@@ -94,16 +89,16 @@ var Svg = (function (_super) {
                 outputs: [{
                         name: "color",
                         description: "The generated color",
-                        dataType: _this.namespace + ".color"
+                        dataType: this.namespace + ".color"
                     }],
                 icon: "nodox:core_nodox",
-                fullName: _this.namespace + ".color"
+                fullName: this.namespace + ".color"
             },
             {
                 name: "HSV Color",
                 description: "Create a color with HSV values",
-                processFunction: _this.processHsvColor,
-                preprocessFunction: _this.preprocess,
+                processFunction: this.processHsvColor,
+                preprocessFunction: this.preprocess,
                 inputs: [{
                         name: "h",
                         description: "Hue value of color",
@@ -124,28 +119,28 @@ var Svg = (function (_super) {
                 outputs: [{
                         name: "color",
                         description: "The generated color",
-                        dataType: _this.namespace + ".color"
+                        dataType: this.namespace + ".color"
                     }],
                 icon: "nodox:core_nodox",
-                fullName: _this.namespace + ".hsvcolor"
+                fullName: this.namespace + ".hsvcolor"
             },
             {
                 name: "Vector",
                 description: "Delta of two points",
-                processFunction: _this.processDeltaPoint,
-                preprocessFunction: _this.preprocess,
+                processFunction: this.processDeltaPoint,
+                preprocessFunction: this.preprocess,
                 inputs: [
                     {
                         name: "first",
                         description: "First point",
-                        dataType: _this.namespace + ".point",
-                        defaultValue: new nodox_core_1.Point(0, 0)
+                        dataType: this.namespace + ".point",
+                        defaultValue: new point_1.Point(0, 0)
                     },
                     {
                         name: "second",
                         description: "Second point",
-                        dataType: _this.namespace + ".point",
-                        defaultValue: new nodox_core_1.Point(0, 0)
+                        dataType: this.namespace + ".point",
+                        defaultValue: new point_1.Point(0, 0)
                     }
                 ],
                 outputs: [
@@ -162,22 +157,22 @@ var Svg = (function (_super) {
                     {
                         name: "vector",
                         description: "Angle between the points",
-                        dataType: _this.namespace + ".point"
+                        dataType: this.namespace + ".point"
                     }
                 ],
                 icon: "nodox:svg_circle",
-                fullName: _this.namespace + ".vector"
+                fullName: this.namespace + ".vector"
             },
             {
                 name: "Circle",
                 description: "Create a circle",
-                processFunction: _this.processCircle,
-                preprocessFunction: _this.preprocess,
+                processFunction: this.processCircle,
+                preprocessFunction: this.preprocess,
                 inputs: [{
                         name: "center",
                         description: "Center of circle",
-                        dataType: _this.namespace + ".point",
-                        defaultValue: new nodox_core_1.Point(0, 0)
+                        dataType: this.namespace + ".point",
+                        defaultValue: new point_1.Point(0, 0)
                     },
                     {
                         name: "radius",
@@ -188,21 +183,21 @@ var Svg = (function (_super) {
                 outputs: [{
                         name: "circle",
                         description: "The circle element",
-                        dataType: _this.namespace + ".element"
+                        dataType: this.namespace + ".element"
                     }],
                 icon: "nodox:svg_circle",
-                fullName: _this.namespace + ".circle"
+                fullName: this.namespace + ".circle"
             },
             {
                 name: "Rectangle",
                 description: "Create a rectangle",
-                processFunction: _this.processRectangle,
-                preprocessFunction: _this.preprocess,
+                processFunction: this.processRectangle,
+                preprocessFunction: this.preprocess,
                 inputs: [{
                         name: "point",
                         description: "First point for rectangle",
-                        dataType: _this.namespace + ".point",
-                        defaultValue: new nodox_core_1.Point(0, 0)
+                        dataType: this.namespace + ".point",
+                        defaultValue: new point_1.Point(0, 0)
                     },
                     {
                         name: "width",
@@ -220,23 +215,23 @@ var Svg = (function (_super) {
                     {
                         name: "rectangle",
                         description: "The rectangle element",
-                        dataType: _this.namespace + ".element"
+                        dataType: this.namespace + ".element"
                     }
                 ],
                 icon: "nodox:svg_rectangle",
-                fullName: _this.namespace + ".rectangle"
+                fullName: this.namespace + ".rectangle"
             },
             {
                 name: "Grid",
                 description: "Creates an array of points",
-                processFunction: _this.processGrid,
-                postprocessFunction: _this.postprocessGrid,
+                processFunction: this.processGrid,
+                postprocessFunction: this.postprocessGrid,
                 inputs: [
                     {
                         name: "position",
                         description: "position of center",
                         dataType: "nodox.modules.svg.point",
-                        defaultValue: function () { new nodox_core_1.Point(0, 0); }
+                        defaultValue: () => { new point_1.Point(0, 0); }
                     }, {
                         name: "columns",
                         description: "number of columns",
@@ -270,19 +265,19 @@ var Svg = (function (_super) {
                         dataType: "nodox.modules.core.number"
                     }],
                 icon: "nodox:svg_grid",
-                fullName: _this.namespace + ".grid"
+                fullName: this.namespace + ".grid"
             },
             {
                 name: "Radial Grid",
                 description: "Creates an circular array of points",
-                processFunction: _this.processRadialGrid,
-                postprocessFunction: _this.postprocessGrid,
+                processFunction: this.processRadialGrid,
+                postprocessFunction: this.postprocessGrid,
                 inputs: [
                     {
                         name: "center",
                         description: "position of center",
                         dataType: "nodox.modules.svg.point",
-                        defaultValue: function () { new nodox_core_1.Point(0, 0); }
+                        defaultValue: () => { new point_1.Point(0, 0); }
                     }, {
                         name: "radius",
                         description: "radius of the circle",
@@ -318,28 +313,29 @@ var Svg = (function (_super) {
                     }
                 ],
                 icon: "nodox:svg_radialGrid",
-                fullName: _this.namespace + ".radialGrid"
+                fullName: this.namespace + ".radialGrid"
             },
             {
                 name: "ellipse",
                 description: "create an ellipse",
-                processFunction: _this.processCircle,
-                preprocessFunction: _this.preprocess,
+                processFunction: this.processCircle,
+                preprocessFunction: this.preprocess,
                 inputs: [],
                 outputs: [],
-                fullName: _this.namespace + ".ellipse"
+                fullName: this.namespace + ".ellipse",
+                icon: "nodox:svg_ellipse",
             },
             {
                 name: "polygon",
                 description: "create a polygon",
-                processFunction: _this.processPolygon,
-                preprocessFunction: _this.preprocess,
+                processFunction: this.processPolygon,
+                preprocessFunction: this.preprocess,
                 inputs: [
                     {
                         name: "center",
                         description: "position of center",
                         dataType: "nodox.modules.svg.point",
-                        defaultValue: new nodox_core_1.Point(0, 0)
+                        defaultValue: new point_1.Point(0, 0)
                     }, {
                         name: "radius",
                         description: "radius of the points of the polygon",
@@ -353,20 +349,17 @@ var Svg = (function (_super) {
                     },
                     {
                         name: "starShaped",
-                        label: "Star shaped",
                         description: "Convex",
                         dataType: "nodox.modules.core.boolean",
                         defaultValue: false
                     },
                     {
                         name: "useInnerRadius",
-                        label: "Use inner radius",
                         description: "Convex",
                         dataType: "nodox.modules.core.boolean",
                         defaultValue: false
                     }, {
                         name: "innerRadius",
-                        label: "inner Radius",
                         description: "inner radius",
                         dataType: "nodox.modules.core.number",
                         defaultValue: 0
@@ -376,37 +369,37 @@ var Svg = (function (_super) {
                     {
                         name: "polygon",
                         description: "The polygon element",
-                        dataType: _this.namespace + ".element"
+                        dataType: this.namespace + ".element"
                     }
                 ],
-                fullName: _this.namespace + ".polygon",
+                fullName: this.namespace + ".polygon",
                 icon: "nodox:svg_polygon",
             },
             {
                 name: "text",
                 description: "create text",
-                processFunction: _this.processCircle,
-                preprocessFunction: _this.preprocess,
+                processFunction: this.processCircle,
+                preprocessFunction: this.preprocess,
                 inputs: [],
                 outputs: [],
-                fullName: _this.namespace + ".text",
+                fullName: this.namespace + ".text",
                 icon: "nodox:svg_text",
             },
             {
                 name: "set fill",
                 description: "fill element",
-                processFunction: _this.processSetFill,
-                preprocessFunction: _this.preprocess,
+                processFunction: this.processSetFill,
+                preprocessFunction: this.preprocess,
                 inputs: [
                     {
                         name: "element",
                         description: "The element",
-                        dataType: _this.namespace + ".element",
+                        dataType: this.namespace + ".element",
                         defaultValue: null
                     }, {
                         name: "color",
                         description: "Color of the fill",
-                        dataType: _this.namespace + ".color",
+                        dataType: this.namespace + ".color",
                         defaultValue: null
                     }, {
                         name: "opacity",
@@ -419,27 +412,27 @@ var Svg = (function (_super) {
                     {
                         name: "element",
                         description: "The stroked element",
-                        dataType: _this.namespace + ".element"
+                        dataType: this.namespace + ".element"
                     }
                 ],
                 icon: "nodox:svg_fill",
-                fullName: _this.namespace + ".fill",
+                fullName: this.namespace + ".fill",
             },
             {
                 name: "set stroke",
                 description: "set a stroke on the element",
-                processFunction: _this.processSetStroke,
-                preprocessFunction: _this.preprocess,
+                processFunction: this.processSetStroke,
+                preprocessFunction: this.preprocess,
                 inputs: [
                     {
                         name: "element",
                         description: "The element to be stroked",
-                        dataType: _this.namespace + ".element",
+                        dataType: this.namespace + ".element",
                         defaultValue: null
                     }, {
                         name: "color",
                         description: "Stroke color",
-                        dataType: _this.namespace + ".color",
+                        dataType: this.namespace + ".color",
                         defaultValue: null
                     }, {
                         name: "width",
@@ -452,71 +445,70 @@ var Svg = (function (_super) {
                     {
                         name: "element",
                         description: "The stroked element",
-                        dataType: _this.namespace + ".element"
+                        dataType: this.namespace + ".element"
                     }
                 ],
                 icon: "editor:ic_border_color",
-                fullName: _this.namespace + ".stroke"
+                fullName: this.namespace + ".stroke"
             },
             {
                 name: "group",
                 description: "group elements",
-                processFunction: _this.processGroup,
-                preprocessFunction: _this.preprocess,
-                postprocessFunction: _this.postprocessGroup,
+                processFunction: this.processGroup,
+                preprocessFunction: this.preprocess,
+                postprocessFunction: this.postprocessGroup,
                 inputs: [{
                         name: "element",
                         description: "The element(s) to be grouped",
-                        dataType: _this.namespace + ".element",
+                        dataType: this.namespace + ".element",
                         defaultValue: null
                     },],
                 outputs: [{
                         name: "element",
                         description: "The group element",
-                        dataType: _this.namespace + ".element"
+                        dataType: this.namespace + ".element"
                     }],
                 icon: "nodox:svg_group",
-                fullName: _this.namespace + ".group"
+                fullName: this.namespace + ".group"
             },
             {
                 name: "combine",
                 description: "combine elements",
-                processFunction: _this.processCombine,
-                preprocessFunction: _this.preprocess,
-                postprocessFunction: _this.postprocessCombine,
-                processingMode: nodox_core_1.NodeProcessingMode.AddNull,
+                processFunction: this.processCombine,
+                preprocessFunction: this.preprocess,
+                postprocessFunction: this.postprocessCombine,
+                processingMode: nodox_core_1.NodeProcessingMode.addEmpty,
                 inputs: [{
                         name: "firstElement",
                         description: "The first element (bottom)",
-                        dataType: _this.namespace + ".element",
+                        dataType: this.namespace + ".element",
                         defaultValue: null
                     }, {
                         name: "secondElement",
                         description: "The 2nd element",
-                        dataType: _this.namespace + ".element",
+                        dataType: this.namespace + ".element",
                         defaultValue: null
                     },
                     {
                         name: "thirdElement",
                         description: "The 3d element",
-                        dataType: _this.namespace + ".element",
+                        dataType: this.namespace + ".element",
                         defaultValue: null
                     },
                     {
                         name: "fourthElement",
                         description: "The 4th element",
-                        dataType: _this.namespace + ".element",
+                        dataType: this.namespace + ".element",
                         defaultValue: null
                     },
                     {
                         name: "fifthElement",
                         description: "The 5th element",
-                        dataType: _this.namespace + ".element",
+                        dataType: this.namespace + ".element",
                         defaultValue: null
                     },
                     {
                         name: "groupElements",
-                        label: "Create group",
                         description: "Convex",
                         dataType: "nodox.modules.core.boolean",
                         defaultValue: true
@@ -524,22 +516,22 @@ var Svg = (function (_super) {
                 outputs: [{
                         name: "element",
                         description: "The resulting element (or elements if not grouped)",
-                        dataType: _this.namespace + ".element"
+                        dataType: this.namespace + ".element"
                     }],
                 icon: "nodox:svg_group",
-                fullName: _this.namespace + ".combine"
+                fullName: this.namespace + ".combine"
             },
             {
                 name: "translate",
                 description: "translates an element",
-                processFunction: _this.processTranslate,
-                preprocessFunction: _this.preprocess,
+                processFunction: this.processTranslate,
+                preprocessFunction: this.preprocess,
                 icon: "nodox:svg_translate",
                 inputs: [
                     {
                         name: "element",
                         description: "The element to be translated",
-                        dataType: _this.namespace + ".element",
+                        dataType: this.namespace + ".element",
                         defaultValue: null
                     }, {
                         name: "dx",
@@ -557,28 +549,28 @@ var Svg = (function (_super) {
                     {
                         name: "element",
                         description: "The translated element",
-                        dataType: _this.namespace + ".element"
+                        dataType: this.namespace + ".element"
                     }
                 ],
-                fullName: _this.namespace + ".translate"
+                fullName: this.namespace + ".translate"
             },
             {
                 name: "scale",
                 description: "Scale an element",
-                processFunction: _this.processScale,
-                preprocessFunction: _this.preprocess,
+                processFunction: this.processScale,
+                preprocessFunction: this.preprocess,
                 icon: "nodox:svg_scale",
                 inputs: [
                     {
                         name: "element",
                         description: "The element to be rotated",
-                        dataType: _this.namespace + ".element",
+                        dataType: this.namespace + ".element",
                         defaultValue: null
                     }, {
                         name: "center",
                         description: "Center of rotation",
-                        dataType: _this.namespace + ".point",
-                        defaultValue: new nodox_core_1.Point(0, 0)
+                        dataType: this.namespace + ".point",
+                        defaultValue: new point_1.Point(0, 0)
                     },
                     {
                         name: "factor",
@@ -590,26 +582,26 @@ var Svg = (function (_super) {
                 outputs: [{
                         name: "element",
                         description: "The rotated element",
-                        dataType: _this.namespace + ".element"
-                    }], fullName: _this.namespace + ".scale"
+                        dataType: this.namespace + ".element"
+                    }], fullName: this.namespace + ".scale"
             },
             {
                 name: "rotate",
                 description: "rotates ",
-                processFunction: _this.processRotate,
-                preprocessFunction: _this.preprocess,
+                processFunction: this.processRotate,
+                preprocessFunction: this.preprocess,
                 icon: "nodox:svg_rotate",
                 inputs: [
                     {
                         name: "element",
                         description: "The element to be rotated",
-                        dataType: _this.namespace + ".element",
+                        dataType: this.namespace + ".element",
                         defaultValue: null
                     }, {
                         name: "center",
                         description: "Center of rotation",
-                        dataType: _this.namespace + ".point",
-                        defaultValue: new nodox_core_1.Point(0, 0)
+                        dataType: this.namespace + ".point",
+                        defaultValue: new point_1.Point(0, 0)
                     },
                     {
                         name: "angle",
@@ -621,53 +613,50 @@ var Svg = (function (_super) {
                 outputs: [{
                         name: "element",
                         description: "The rotated element",
-                        dataType: _this.namespace + ".element"
+                        dataType: this.namespace + ".element"
                     }],
-                fullName: _this.namespace + ".rotate"
+                fullName: this.namespace + ".rotate"
             },
             {
                 name: "matrix transform",
                 description: "create a circle",
-                processFunction: _this.processCircle,
-                preprocessFunction: _this.preprocess,
+                processFunction: this.processCircle,
+                preprocessFunction: this.preprocess,
                 inputs: [],
                 outputs: [],
-                fullName: _this.namespace + ".matrix"
+                fullName: this.namespace + ".matrix",
+                icon: "nodox:svg_matrix",
             }
         ];
-        return _this;
     }
-    Svg.prototype.merge = function (otherModule) {
-        return _super.prototype.merge.call(this, otherModule);
-    };
-    Svg.prototype.processColor = function (context, result, inputParams, index) {
+    processColor(context, result, inputParams, index) {
         result["color"] = result["color"] || new Array();
         var r = Math.min(Math.max(+inputParams["r"], 0), 1) * 255;
         var g = Math.min(Math.max(+inputParams["g"], 0), 1) * 255;
         var b = Math.min(Math.max(+inputParams["b"], 0), 1) * 255;
         result["color"].push(new SVG.Color({ r: r, g: g, b: b }));
-    };
-    Svg.prototype.processHsvColor = function (context, result, inputParams, index) {
+    }
+    processHsvColor(context, result, inputParams, index) {
         result["color"] = result["color"] || new Array();
         var h = Math.min(Math.max(+inputParams["h"], 0), 1);
         var s = Math.min(Math.max(+inputParams["s"], 0), 1);
         var v = Math.min(Math.max(+inputParams["v"], 0), 1);
-        var color = convert.hsv.rgb([h, s, v]);
-        result["color"].push(new SVG.Color({ r: color[0], g: color[1], b: color[2] }));
-    };
-    Svg.prototype.processPoint = function (context, result, inputParams, index) {
+        var [r, g, b] = convert.hsv.rgb([h, s, v]) || [1, 2, 3];
+        result["color"].push(new SVG.Color({ r, g, b }));
+    }
+    processPoint(context, result, inputParams, index) {
         result["point"] = result["point"] || new Array();
         var x = inputParams["x"];
         var y = inputParams["y"];
         result["point"].push({ x: x, y: y });
-    };
-    Svg.prototype.processCircle = function (context, result, inputParams, index) {
+    }
+    processCircle(context, result, inputParams, index) {
         result["circle"] = result["circle"] || new Array();
         var point = inputParams["center"];
         var radius = +inputParams["radius"];
         result["circle"].push(context.svg.circle(radius).move(point.x, point.y));
-    };
-    Svg.prototype.processRectangle = function (context, result, inputParams, index) {
+    }
+    processRectangle(context, result, inputParams, index) {
         result["rectangle"] = result["rectangle"] || new Array();
         var point = inputParams["point"];
         var width = +inputParams["width"];
@@ -678,27 +667,27 @@ var Svg = (function (_super) {
         if (!isNaN(radius))
             rect.radius(radius);
         result["rectangle"].push(rect);
-    };
-    Svg.prototype.processDeltaPoint = function (context, result, inputParams, index) {
+    }
+    processDeltaPoint(context, result, inputParams, index) {
         result["distance"] = result["distance"] || new Array();
         result["angle"] = result["angle"] || new Array();
         result["vector"] = result["vector"] || new Array();
-        var first = new nodox_core_1.Point(inputParams["first"].x, inputParams["first"].y);
-        var second = new nodox_core_1.Point(inputParams["second"].x, inputParams["second"].y);
+        var first = new point_1.Point(inputParams["first"].x, inputParams["first"].y);
+        var second = new point_1.Point(inputParams["second"].x, inputParams["second"].y);
         var vector = first.subtract(second);
         result["vector"].push(vector);
         result["distance"].push(Math.sqrt(vector.x * vector.x + vector.y * vector.y));
         result["angle"].push(Math.atan2(vector.y, vector.x) / Math.PI / 2 + 0.5);
-    };
-    Svg.prototype.processEllipse = function (context, result, inputParams, index) {
+    }
+    processEllipse(context, result, inputParams, index) {
         var width = +inputParams["width"];
         var height = +inputParams["height"];
         var ellipse = context.svg.ellipse(width, height);
         result["ellipse"].push();
-    };
+    }
     // number
     // center : point
-    Svg.prototype.processPolygon = function (context, result, inputParams, index) {
+    processPolygon(context, result, inputParams, index) {
         result["polygon"] = result["polygon"] || new Array();
         var center = inputParams["center"];
         var count = +inputParams["count"];
@@ -717,9 +706,9 @@ var Svg = (function (_super) {
         for (var c = 0; c < count; c++) {
             var x = +center.x + Math.cos(2 * c * Math.PI / count) * radius;
             var y = +center.y + Math.sin(2 * c * Math.PI / count) * radius;
-            points.push(new nodox_core_1.Point(x, y));
+            points.push(new point_1.Point(x, y));
         }
-        //starshaped polygons hae multiple subpaths
+        //starshaped polygons have multiple subpaths
         var pointsAdded = 0;
         var newPath = true;
         while (pointsAdded < count) {
@@ -730,18 +719,18 @@ var Svg = (function (_super) {
             }
             pathString += (newPath) ? "M" + points[index].x + "," + points[index].y : " L " + points[index].x + "," + points[index].y;
             newPath = false;
-            points[index] = null;
+            delete points[index];
             index = (index + indexStep) % count;
             pointsAdded++;
         }
         pathString += " Z";
         result["polygon"].push(context.svg.path(pathString));
-    };
-    Svg.prototype.processText = function (context, result, inputParams, index) {
+    }
+    processText(context, result, inputParams, index) {
         var text = "" + inputParams["text"];
         result["sum"].push(context.svg.text(text));
-    };
-    Svg.prototype.processSetStroke = function (context, result, inputParams, index) {
+    }
+    processSetStroke(context, result, inputParams, index) {
         result["element"] = result["element"] || new Array();
         var element = inputParams["element"];
         var color = inputParams["color"];
@@ -750,8 +739,8 @@ var Svg = (function (_super) {
             element.attr({ stroke: color.toHex(), strokeWidth: width });
         }
         result["element"].push(element);
-    };
-    Svg.prototype.processSetFill = function (context, result, inputParams, index) {
+    }
+    processSetFill(context, result, inputParams, index) {
         result["element"] = result["element"] || new Array();
         var element = inputParams["element"];
         var color = inputParams["color"];
@@ -764,20 +753,20 @@ var Svg = (function (_super) {
             }
         }
         result["element"].push(element);
-    };
-    Svg.prototype.processGroup = function (context, result, inputParams, index) {
+    }
+    processGroup(context, result, inputParams, index) {
         var gElement = context.groupElement = context.groupElement || context.svg.group();
         var element = inputParams["element"];
         if (element) {
             gElement.add(element);
         }
-    };
-    Svg.prototype.postprocessGroup = function (context, nodeValues) {
+    }
+    postprocessGroup(context, nodeValues) {
         nodeValues.values["element"] = nodeValues.values["element"] || new Array();
         nodeValues.values["element"].push(context.groupElement);
         context.groupElement = null;
-    };
-    Svg.prototype.processCombine = function (context, result, inputParams, index) {
+    }
+    processCombine(context, result, inputParams, index) {
         var firstElement = inputParams["firstElement"];
         var secondEement = inputParams["secondElement"];
         var thirdElement = inputParams["thirdElement"];
@@ -805,30 +794,30 @@ var Svg = (function (_super) {
             context.collectedElements.fourthElements.push(fourthElement);
         if (fifthElement)
             context.collectedElements.fifthElements.push(fifthElement);
-    };
-    Svg.prototype.postprocessCombine = function (context, nodeValues) {
+    }
+    postprocessCombine(context, nodeValues) {
         nodeValues.values["element"] = nodeValues.values["element"] || new Array();
         if (context.groupElement) {
             // all elements are grouped in the only output element
             nodeValues.values["element"].push(context.groupElement);
-            context.collectedElements.firstElements.forEach(function (elem) { context.groupElement.add(elem); });
-            context.collectedElements.secondElements.forEach(function (elem) { context.groupElement.add(elem); });
-            context.collectedElements.thirdElements.forEach(function (elem) { context.groupElement.add(elem); });
-            context.collectedElements.fourthElements.forEach(function (elem) { context.groupElement.add(elem); });
-            context.collectedElements.fifthElements.forEach(function (elem) { context.groupElement.add(elem); });
+            context.collectedElements.firstElements.forEach((elem) => { context.groupElement.add(elem); });
+            context.collectedElements.secondElements.forEach((elem) => { context.groupElement.add(elem); });
+            context.collectedElements.thirdElements.forEach((elem) => { context.groupElement.add(elem); });
+            context.collectedElements.fourthElements.forEach((elem) => { context.groupElement.add(elem); });
+            context.collectedElements.fifthElements.forEach((elem) => { context.groupElement.add(elem); });
             context.groupElement = null;
         }
         else {
             // all elements are output
-            context.collectedElements.firstElements.forEach(function (elem) { nodeValues.values["element"].push(elem); });
-            context.collectedElements.secondElements.forEach(function (elem) { nodeValues.values["element"].push(elem); });
-            context.collectedElements.thirdElements.forEach(function (elem) { nodeValues.values["element"].push(elem); });
-            context.collectedElements.fourthElements.forEach(function (elem) { nodeValues.values["element"].push(elem); });
-            context.collectedElements.fifthElements.forEach(function (elem) { nodeValues.values["element"].push(elem); });
+            context.collectedElements.firstElements.forEach((elem) => { nodeValues.values["element"].push(elem); });
+            context.collectedElements.secondElements.forEach((elem) => { nodeValues.values["element"].push(elem); });
+            context.collectedElements.thirdElements.forEach((elem) => { nodeValues.values["element"].push(elem); });
+            context.collectedElements.fourthElements.forEach((elem) => { nodeValues.values["element"].push(elem); });
+            context.collectedElements.fifthElements.forEach((elem) => { nodeValues.values["element"].push(elem); });
         }
         context.collectedElements = null;
-    };
-    Svg.prototype.applyMatrix = function (element, matrix) {
+    }
+    applyMatrix(element, matrix) {
         element.transform({
             a: matrix.a,
             b: matrix.a,
@@ -837,11 +826,11 @@ var Svg = (function (_super) {
             e: matrix.e,
             f: matrix.f
         });
-    };
+    }
     //input svg element
     //input matrix abcd ef
     //input svg element
-    Svg.prototype.processTransform = function (context, result, inputParams, index) {
+    processTransform(context, result, inputParams, index) {
         result["element"] = result["element"] || new Array();
         var element = inputParams["element"];
         var a = +inputParams["a"];
@@ -853,18 +842,18 @@ var Svg = (function (_super) {
         var matrix = new SVG.Matrix({ a: a, b: b, c: c, d: d, e: e, f: f });
         this.applyMatrix(element, matrix);
         result["element"].push(element);
-    };
+    }
     //input svg element
     //input rotation angle
     //input rotation point
     //ouput svg element
-    Svg.prototype.processRotate = function (context, result, inputParams, index) {
+    processRotate(context, result, inputParams, index) {
         result["element"] = result["element"] || new Array();
         var element = inputParams["element"];
         var point = inputParams["center"];
         if (!point) {
             var bbox = element.bbox();
-            point = new nodox_core_1.Point(bbox.cx, bbox.cy);
+            point = new point_1.Point(bbox.cx, bbox.cy);
         }
         var angle = +inputParams["angle"] * 360;
         //var matrix = <Snap.Matrix> element.transform().localMatrix;
@@ -872,12 +861,12 @@ var Svg = (function (_super) {
         matrix.rotate(angle, point.x, point.y);
         this.applyMatrix(element, matrix);
         result["element"].push(element);
-    };
+    }
     //input svg element
     //input scale factor
     //input scale origin point
     //ouput svg element
-    Svg.prototype.processScale = function (context, result, inputParams, index) {
+    processScale(context, result, inputParams, index) {
         result["element"] = result["element"] || new Array();
         var element = inputParams["element"];
         var point = inputParams["center"];
@@ -886,35 +875,35 @@ var Svg = (function (_super) {
         matrix.scale(factor, factor, point.x, point.y);
         this.applyMatrix(element, matrix);
         result["element"].push(element);
-    };
+    }
     //input svg element
     //input dx
     //input dy
     //ouput svg element
-    Svg.prototype.processTranslate = function (context, result, inputParams, index) {
+    processTranslate(context, result, inputParams, index) {
         result["element"] = result["element"] || new Array();
         var element = inputParams["element"];
         var dx = +inputParams["dx"];
         var dy = +inputParams["dy"];
         element.translate(dx, dy);
         result["element"].push(element);
-    };
+    }
     //output pattern
     //output patternName
     //output svg element
-    Svg.prototype.processCreatePattern = function (context, result, inputParams, index) {
+    processCreatePattern(context, result, inputParams, index) {
         result["element"] = result["element"] || new Array();
         var element = inputParams["element"];
         result["element"].push(element);
-    };
+    }
     //input patternName
     //input svg element
-    Svg.prototype.processSetPattern = function (context, result, inputParams, index) {
+    processSetPattern(context, result, inputParams, index) {
         result["element"] = result["element"] || new Array();
         var element = inputParams["element"];
         result["element"].push(element);
-    };
-    Svg.prototype.processRadialGrid = function (context, result, inputParams, index) {
+    }
+    processRadialGrid(context, result, inputParams, index) {
         result["point"] = result["point"] || new Array();
         result["x"] = result["x"] || new Array();
         result["y"] = result["y"] || new Array();
@@ -928,8 +917,8 @@ var Svg = (function (_super) {
             result["x"].push(x);
             result["y"].push(y);
         }
-    };
-    Svg.prototype.processGrid = function (context, result, inputParams, index) {
+    }
+    processGrid(context, result, inputParams, index) {
         result["point"] = result["point"] || new Array();
         var position = inputParams["position"];
         var columns = +inputParams["columns"];
@@ -943,16 +932,15 @@ var Svg = (function (_super) {
                 result["point"].push({ x: x, y: y });
             }
         }
-    };
-    Svg.prototype.postprocessGrid = function (context, nodeValues) {
+    }
+    postprocessGrid(context, nodeValues) {
         nodeValues.keyNames.push("count");
         nodeValues.values["count"] = nodeValues.values["count"] || new Array();
         nodeValues.values["point"] = nodeValues.values["point"] || new Array();
         nodeValues.values["count"].push(nodeValues.values["point"].length);
-    };
-    Svg.prototype.preprocess = function (context) {
-        context.svg = SVG(document.documentElement);
-    };
-    return Svg;
-}(Nodox_Modules_NodoxModule_1.NodoxModule));
+    }
+    preprocess(context) {
+        context.svg = {};
+    }
+}
 exports.Svg = Svg;

@@ -1,4 +1,4 @@
-export * from './Nodox.Modules.Core';
+export * from './core';
 export * from './Nodox.Modules.Calc';
 export * from './Nodox.Modules.Datasets';
 export * from './Nodox.Modules.Domains';

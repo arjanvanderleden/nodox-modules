@@ -1,7 +1,7 @@
-import { NodoxModule } from "./Nodox.Modules.NodoxModule";
-export declare class Domains extends NodoxModule {
+import { NodoxModuleBase } from "./Nodox.Modules.NodoxModule";
+export declare class Domains extends NodoxModuleBase {
     constructor();
-    private processLinearDomain(context, result, inputParams, index);
-    private processExponentialDomain(context, result, inputParams, index);
-    private processRange(context, result, inputParams, index);
+    private processLinearDomain;
+    private processExponentialDomain;
+    private processRange;
 }

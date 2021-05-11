@@ -1,16 +1,16 @@
-﻿import { INodoxModule, INodeDefinition, IDataType } from 'nodox-core';
-export abstract class NodoxModule implements INodoxModule {
-  name: string;
-  description: string;
-  namespace: string;
-  dependencies: string[];
-  dataTypes: IDataType[];
-  definitions: Array<INodeDefinition>;
-  cloneFunctions = {};
+﻿import { NodoxModule, NodoxNodeDefinition, DataType, Lookup } from 'nodox-core';
+export abstract class NodoxModuleBase implements NodoxModule {
+  name: string = '';
+  description: string = '';
+  namespace: string = '';
+  dependencies: string[] = [];
+  dataTypes: DataType[] = [];
+  definitions: NodoxNodeDefinition[] = [];
+  cloneFunctions: Lookup<any> = {};
 
-  merge(otherModule: INodoxModule): INodoxModule {
+  merge(otherModule: NodoxModule): NodoxModule {
     otherModule.definitions.forEach(newDefinition => {
-      if (this.definitions.findIndex(def => { return def.fullName === newDefinition.fullName })==-1){
+      if (this.definitions.find(def => def.fullName === newDefinition.fullName)){
         this.definitions.push(newDefinition);
       } else {
         console.warn("This module %o, already has a definition with fullname %o", this.name, newDefinition.fullName);
@@ -32,21 +32,21 @@ export class XXX extends NodoxModule {
     this.dependencies = [
       "nodox.modules.core",
       "nodox.modules.Calc"];
-    this.dataTypes = <IDataType[]>[
+    this.dataTypes = <DataType[]>[
       {
         name: "dtXXX",
         description: "<description>",
         accepts: []
       }
     ];
-    this.definitions = <INodeDefinition[]>[
+    this.definitions = <NodoxNodeDefinition[]>[
       {
         name: "deXXX",
         description: "<description>",
         processFunction: ()=>{},
         preprocessFunction: (context: IRunningContext) => {},
         postprocessFunction: (context: IRunningContext) => {},
-        inputs: <Array<IInputDescriptor>>[
+        inputs: <Array<InputDefinition>>[
           {
             name: "inputXXX",
             description: "<description>",
@@ -54,7 +54,7 @@ export class XXX extends NodoxModule {
             defaultValue: 0
           }
         ],
-        outputs: <Array<IOutputDescriptor>>[
+        outputs: <Array<OutputDefinition>>[
           {
             name: "outputXXX",
             description: "<description>",

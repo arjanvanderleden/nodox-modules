@@ -1,14 +1,15 @@
-﻿import { NodeValues, IInputDescriptor, INodeDefinition, IDataType, IRunningContext, IOutputDescriptor } from "nodox-core";
-import { NodoxModule } from "./Nodox.Modules.NodoxModule";
-  
-export class Core extends NodoxModule {
+﻿import { NodeValues, InputDefinition, NodoxNodeDefinition, DataType, NodoxRunningContext, OutputDefinition, Lookup } from "nodox-core";
+import { NodoxModuleBase } from "../Nodox.Modules.NodoxModule";
+import { listReverse } from "./list-reverse";
+
+export class Core extends NodoxModuleBase {
     constructor() {
       super();
       this.name = "Core";
       this.description = "Core definitions for Nodox";
       this.namespace = "nodox.modules.core";
-      this.dependencies = new Array<string>();
-      this.dataTypes = <IDataType[]>[
+      this.dependencies = [];
+      this.dataTypes = [
         {
           name: "number",
           description: "Javascript number",
@@ -30,12 +31,12 @@ export class Core extends NodoxModule {
           accepts: ["*"]
         }
       ];
-      this.definitions = <INodeDefinition[]>[
+      this.definitions = [
         {
           name: "Add",
           description: "adds two numbers",
           processFunction: this.processAdd,
-          inputs: <Array<IInputDescriptor>>[
+          inputs:[
             {
               name: "a",
               description: "First number",
@@ -49,7 +50,7 @@ export class Core extends NodoxModule {
               defaultValue: 0
             }
           ],
-          outputs: <Array<IOutputDescriptor>>[
+          outputs:[
             {
               name: "sum",
               description: "Sum of a and b",
@@ -63,14 +64,14 @@ export class Core extends NodoxModule {
           name: "Random",
           description: "creates a seeded random number ",
           processFunction: this.processRandom,
-          inputs: <Array<IInputDescriptor>>[
+          inputs:[
             {
               name: "seed",
               description: "The seed to be used for teh random generator",
               dataType: this.namespace + ".string",
               defaultValue: "For example: Nodox"
             }          ],
-          outputs: <Array<IOutputDescriptor>>[
+          outputs: [
             {
               name: "random",
               description: "A random number between 0 and 1",
@@ -84,7 +85,7 @@ export class Core extends NodoxModule {
           name: "Max",
           description: "the max of two numbers",
           processFunction: this.processMax,
-          inputs: <Array<IInputDescriptor>>[
+          inputs:[
             {
               name: "a",
               description: "First number",
@@ -98,7 +99,7 @@ export class Core extends NodoxModule {
               defaultValue: 0
             }
           ],
-          outputs: <Array<IOutputDescriptor>>[
+          outputs: [
             {
               name: "max",
               description: "The max of a and b",
@@ -112,7 +113,7 @@ export class Core extends NodoxModule {
           name: "Min",
           description: "the min of two numbers",
           processFunction: this.processMin,
-          inputs: <Array<IInputDescriptor>>[
+          inputs:[
             {
               name: "a",
               description: "First number",
@@ -126,7 +127,7 @@ export class Core extends NodoxModule {
               defaultValue: 0
             }
           ],
-          outputs: <Array<IOutputDescriptor>>[
+          outputs: [
             {
               name: "max",
               description: "The min of a and b",
@@ -139,9 +140,9 @@ export class Core extends NodoxModule {
         {
           name: "List sort",
           description: "Sorts a list",
-          processFunction: this.processList,
+          processFunction: undefined as any,
           postprocessFunction: this.postprocessSort,
-          inputs: <Array<IInputDescriptor>>[
+          inputs:[
             {
               name: "item",
               description: "Item in the list",
@@ -155,7 +156,7 @@ export class Core extends NodoxModule {
               defaultValue: null
             }
           ],
-          outputs: <Array<IOutputDescriptor>>[
+          outputs: [
             {
               name: "item",
               description: "Item in the list",
@@ -167,9 +168,9 @@ export class Core extends NodoxModule {
         }, {
           name: "List shuffle",
           description: "Shuffles a list",
-          processFunction: this.processList,
+          processFunction: undefined as any,
           postprocessFunction: this.postprocessShuffle,
-          inputs: <Array<IInputDescriptor>>[
+          inputs:[
             {
               name: "item",
               description: "Item in the list",
@@ -184,7 +185,7 @@ export class Core extends NodoxModule {
               defaultValue: "for example: Nodox"
             }
           ],
-          outputs: <Array<IOutputDescriptor>>[
+          outputs: [
             {
               name: "item",
               description: "Item in the list",
@@ -193,34 +194,12 @@ export class Core extends NodoxModule {
           ],
           icon: "nodox:list_shuffle",
           fullName: this.namespace + ".shuffle"
-        }, {
-          name: "List reverse",
-          description: "Shuffles a list",
-          processFunction: this.processList,
-          postprocessFunction: this.postprocessReverse,
-          inputs: <Array<IInputDescriptor>>[
-            {
-              name: "item",
-              description: "Item in the list",
-              dataType: this.namespace + ".any",
-              defaultValue: null
-            }
-          ],
-          outputs: <Array<IOutputDescriptor>>[
-            {
-              name: "item",
-              description: "Item in the list",
-              dataType: this.namespace + ".any"
-            }
-          ],
-          icon: "nodox:list_reverse",
-          fullName: this.namespace + ".reverse"
-        }
-
+        },
+        listReverse
       ];
     }
 
-    private processRandom(context: IRunningContext, result: any, inputParams: Object, index:number) {
+    private processRandom(context: NodoxRunningContext, result: any, inputParams: Lookup<any>, index:number) {
       if (!result["random"] ){
         result["random"] = new Array<number>();
         var seed = inputParams["seed"];
@@ -230,38 +209,28 @@ export class Core extends NodoxModule {
     }
 
 
-    private processAdd(context: IRunningContext, result: any, inputParams: Object, index:number) {
+    private processAdd(context: NodoxRunningContext, result: any, inputParams: Lookup<any>, index:number) {
       result["sum"] = result["sum"] || new Array<number>();
       var a = +inputParams["a"];
       var b = +inputParams["b"];
       result["sum"].push(a + b);
     }
 
-    private processMax(context: IRunningContext, result: any, inputParams: Object, index:number) {
+    private processMax(context: NodoxRunningContext, result: any, inputParams: Lookup<any>, index:number) {
       result["max"] = result["max"] || new Array<number>();
       var a = +inputParams["a"];
       var b = +inputParams["b"];
       result["max"].push(Math.max(a, b));
     }
 
-    private processMin(context: IRunningContext, result: any, inputParams: Object, index:number) {
+    private processMin(context: NodoxRunningContext, result: any, inputParams: Lookup<any>, index:number) {
       result["min"] = result["min"] || new Array<number>();
       var a = +inputParams["a"];
       var b = +inputParams["b"];
       result["min"].push(Math.min(a, b));
     }
 
-    private processList(context: IRunningContext, result: NodeValues, inputParams: Object, index:number) {
-      result["item"] = result["item"] || new Array<any>();
-      if (!result["seed"]) {
-        result["seed"] = new Array<string>();
-        result["seed"].push(inputParams["seed"])
-      };
-      var item = inputParams["item"];
-      result["item"].push(item);
-    }
-
-    private postprocessSort(context: IRunningContext, nodeValues: NodeValues) {
+    private postprocessSort(context: NodoxRunningContext, nodeValues: NodeValues<any>) {
       nodeValues.keyNames.push("count");
       nodeValues.values["count"] = nodeValues.values["count"] || new Array<number>();
       nodeValues.values["item"] = nodeValues.values["item"] || new Array<any>();
@@ -269,7 +238,7 @@ export class Core extends NodoxModule {
       nodeValues.values["count"].push(nodeValues.values["item"].length);
     }
 
-    private postprocessShuffle(context: IRunningContext, nodeValues: NodeValues) {
+    private postprocessShuffle(context: NodoxRunningContext, nodeValues: Lookup<any>) {
       nodeValues.keyNames.push("count");
       nodeValues.values["count"] = nodeValues.values["count"] || new Array<number>();
       nodeValues.values["item"] = nodeValues.values["item"] || new Array<any>();
@@ -298,15 +267,6 @@ export class Core extends NodoxModule {
       shuffle(seed, nodeValues.values["item"]);
       nodeValues.values["count"].push(nodeValues.values["item"].length);
     }
-
-    private postprocessReverse(context: IRunningContext, nodeValues: NodeValues) {
-      nodeValues.keyNames.push("count");
-      nodeValues.values["count"] = nodeValues.values["count"] || new Array<number>();
-      nodeValues.values["item"] = nodeValues.values["item"] || new Array<any>();
-      nodeValues.values["item"].revers();
-      nodeValues.values["count"].push(nodeValues.values["item"].length);
-    }
-
 
   }
 

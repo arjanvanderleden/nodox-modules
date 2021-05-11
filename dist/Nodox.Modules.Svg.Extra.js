@@ -1,40 +1,29 @@
 "use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 Object.defineProperty(exports, "__esModule", { value: true });
-var nodox_core_1 = require("nodox-core");
-var Nodox_Modules_NodoxModule_1 = require("./Nodox.Modules.NodoxModule");
-var SVG = require("svg.js");
-var SvgExtra = (function (_super) {
-    __extends(SvgExtra, _super);
-    function SvgExtra() {
-        var _this = _super.call(this) || this;
-        _this.name = "SvgExtra";
-        _this.dependencies = [
+exports.SvgExtra = void 0;
+const Nodox_Modules_NodoxModule_1 = require("./Nodox.Modules.NodoxModule");
+const point_1 = require("./point");
+class SvgExtra extends Nodox_Modules_NodoxModule_1.NodoxModuleBase {
+    constructor() {
+        super();
+        this.name = "SvgExtra";
+        this.dependencies = [
             "nodox.modules.svg"
         ];
-        _this.namespace = "nodox.modules.svg";
-        _this.dataTypes = [];
-        _this.definitions = [
+        this.namespace = "nodox.modules.svg";
+        this.dataTypes = [];
+        this.definitions = [
             {
                 name: "Sun",
                 description: "Create a point",
-                processFunction: _this.processSun,
-                preprocessFunction: _this.preprocess,
+                processFunction: this.processSun,
+                preprocessFunction: this.preprocess,
                 inputs: [
                     {
                         name: "center",
                         description: "position of center",
                         dataType: "nodox.modules.svg.point",
-                        defaultValue: function () { new nodox_core_1.Point(0, 0); }
+                        defaultValue: () => { new point_1.Point(0, 0); }
                     },
                     {
                         name: "count",
@@ -88,12 +77,11 @@ var SvgExtra = (function (_super) {
                         dataType: "nodox.modules.svg.element"
                     }],
                 icon: "nodox:svg_point",
-                fullName: _this.namespace + ".sun"
+                fullName: this.namespace + ".sun"
             }
         ];
-        return _this;
     }
-    SvgExtra.prototype.processSun = function (context, result, inputParams, index) {
+    processSun(context, result, inputParams, index) {
         result["sun"] = result["sun"] || new Array();
         var center = inputParams["center"];
         var count = +inputParams["count"];
@@ -136,10 +124,9 @@ var SvgExtra = (function (_super) {
             }
         }
         result["sun"].push(context.svg.path(pathString));
-    };
-    SvgExtra.prototype.preprocess = function (context) {
-        context.svg = SVG(window.document.documentElement);
-    };
-    return SvgExtra;
-}(Nodox_Modules_NodoxModule_1.NodoxModule));
+    }
+    preprocess(context) {
+        context.svg = {}; //SVG(window.document.documentElement);      }
+    }
+}
 exports.SvgExtra = SvgExtra;

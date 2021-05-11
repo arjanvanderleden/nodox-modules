@@ -1,58 +1,58 @@
-﻿import { NodeValues, IInputDescriptor, INodeDefinition, IDataType, IRunningContext, IOutputDescriptor } from "nodox-core";
-import { NodoxModule } from "./Nodox.Modules.NodoxModule";
+﻿import { NodeValues, InputDefinition, NodoxNodeDefinition, DataType, NodoxRunningContext, OutputDefinition, Lookup } from "nodox-core";
+import { NodoxModuleBase } from "./Nodox.Modules.NodoxModule";
 
-export class Calc extends NodoxModule {
+export class Calc extends NodoxModuleBase {
     constructor() {
         super();
         this.name = "Calc";
         this.description = "Definitions for math functions";
         this.namespace = "nodox.modules.calc";
         this.dependencies = ["nodox.modules.core"];
-        this.dataTypes = <IDataType[]>[
+        this.dataTypes = <DataType[]>[
 
         ];
-        this.definitions = <INodeDefinition[]>[
+        this.definitions = <NodoxNodeDefinition[]>[
             {
                 name: "Square",
                 description: "calculates square of two numbers",
                 processFunction: this.processSquare,
-                inputs: <Array<IInputDescriptor>>[{
+                inputs: <Array<InputDefinition>>[{
                     name: "a",
                     description: "First number",
                     dataType: "nodox.modules.core.number"
                 }
                 ],
-                outputs: <Array<IOutputDescriptor>>[{
+                outputs: <Array<OutputDefinition>>[{
                     name: "square",
                     description: "Square of a",
                     dataType: this.namespace + ".number"
                 }],
                 icon: "action:ic_3d_rotation",
-                fullName: "nodox.modules.core.number"
+                fullName: this.namespace + ".square"
             },
             {
                 name: "Square root",
                 description: "calculates square of two numbers",
                 processFunction: this.processSquare,
-                inputs: <Array<IInputDescriptor>>[{
+                inputs: <Array<InputDefinition>>[{
                     name: "a",
                     description: "First number",
                     dataType: "nodox.modules.core.number"
                 }
                 ],
-                outputs: <Array<IOutputDescriptor>>[{
+                outputs: <Array<OutputDefinition>>[{
                     name: "squareroot",
                     description: "Squareroot of a",
                     dataType: "nodox.modules.core.number"
                 }],
                 icon: "action:ic_3d_rotation",
-                fullName: "nodox.modules.core.number"
+                fullName: this.namespace + ".squareroot",
             },
             {
                 name: "Math constant",
                 description: "Provides a math constant like Pi",
                 processFunction: this.processConstant,
-                inputs: <Array<IInputDescriptor>>[{
+                inputs: <Array<InputDefinition>>[{
                     name: "name",
                     description: "A string that can be translated into a mathematical constant like pi, PI, Pi",
                     dataType: "nodox.modules.core.string",
@@ -61,7 +61,7 @@ export class Calc extends NodoxModule {
                     defaultValue: "PI"
                 }
                 ],
-                outputs: <Array<IOutputDescriptor>>[{
+                outputs: <Array<OutputDefinition>>[{
                     name: "value",
                     description: "Value of constant",
                     dataType: "nodox.modules.core.number"
@@ -74,19 +74,19 @@ export class Calc extends NodoxModule {
 
 
 
-    private processSquare(context: IRunningContext, result: NodeValues, inputParams: Object, index: number) {
-        var processResult = {};
+    private processSquare(context: NodoxRunningContext, result: Lookup<any>, inputParams: Lookup<any>, index: number) {
+      const processResult = {};
         return processResult;
     }
 
-    private processSquareRoot(context: IRunningContext, result: NodeValues, inputParams: Object, index: number) {
-        var processResult = {};
+    private processSquareRoot(context: NodoxRunningContext, result: Lookup<any>, inputParams: Lookup<any>, index: number) {
+      const processResult = {};
         return processResult;
     }
 
-    private processConstant(context: IRunningContext, result: NodeValues, inputParams: Object, index: number) {
+    private processConstant(context: NodoxRunningContext, result: Lookup<any>, inputParams: Lookup<any>, index: number) {
         result["value"] = result["value"] || new Array<number>();
-        var constantValue = 0;
+        let constantValue = 0;
         switch ((<string>inputParams["name"]).toUpperCase()) {
             case "PI": constantValue = Math.PI; break;
             case "E": constantValue = Math.E; break;

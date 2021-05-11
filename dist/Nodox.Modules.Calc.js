@@ -1,30 +1,20 @@
 "use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Nodox_Modules_NodoxModule_1 = require("./Nodox.Modules.NodoxModule");
-var Calc = (function (_super) {
-    __extends(Calc, _super);
-    function Calc() {
-        var _this = _super.call(this) || this;
-        _this.name = "Calc";
-        _this.description = "Definitions for math functions";
-        _this.namespace = "nodox.modules.calc";
-        _this.dependencies = ["nodox.modules.core"];
-        _this.dataTypes = [];
-        _this.definitions = [
+exports.Calc = void 0;
+const Nodox_Modules_NodoxModule_1 = require("./Nodox.Modules.NodoxModule");
+class Calc extends Nodox_Modules_NodoxModule_1.NodoxModuleBase {
+    constructor() {
+        super();
+        this.name = "Calc";
+        this.description = "Definitions for math functions";
+        this.namespace = "nodox.modules.calc";
+        this.dependencies = ["nodox.modules.core"];
+        this.dataTypes = [];
+        this.definitions = [
             {
                 name: "Square",
                 description: "calculates square of two numbers",
-                processFunction: _this.processSquare,
+                processFunction: this.processSquare,
                 inputs: [{
                         name: "a",
                         description: "First number",
@@ -34,15 +24,15 @@ var Calc = (function (_super) {
                 outputs: [{
                         name: "square",
                         description: "Square of a",
-                        dataType: _this.namespace + ".number"
+                        dataType: this.namespace + ".number"
                     }],
                 icon: "action:ic_3d_rotation",
-                fullName: "nodox.modules.core.number"
+                fullName: this.namespace + ".square"
             },
             {
                 name: "Square root",
                 description: "calculates square of two numbers",
-                processFunction: _this.processSquare,
+                processFunction: this.processSquare,
                 inputs: [{
                         name: "a",
                         description: "First number",
@@ -55,12 +45,12 @@ var Calc = (function (_super) {
                         dataType: "nodox.modules.core.number"
                     }],
                 icon: "action:ic_3d_rotation",
-                fullName: "nodox.modules.core.number"
+                fullName: this.namespace + ".squareroot",
             },
             {
                 name: "Math constant",
                 description: "Provides a math constant like Pi",
-                processFunction: _this.processConstant,
+                processFunction: this.processConstant,
                 inputs: [{
                         name: "name",
                         description: "A string that can be translated into a mathematical constant like pi, PI, Pi",
@@ -76,22 +66,21 @@ var Calc = (function (_super) {
                         dataType: "nodox.modules.core.number"
                     }],
                 icon: "nodox:math_constant",
-                fullName: _this.namespace + ".constant"
+                fullName: this.namespace + ".constant"
             }
         ];
-        return _this;
     }
-    Calc.prototype.processSquare = function (context, result, inputParams, index) {
-        var processResult = {};
+    processSquare(context, result, inputParams, index) {
+        const processResult = {};
         return processResult;
-    };
-    Calc.prototype.processSquareRoot = function (context, result, inputParams, index) {
-        var processResult = {};
+    }
+    processSquareRoot(context, result, inputParams, index) {
+        const processResult = {};
         return processResult;
-    };
-    Calc.prototype.processConstant = function (context, result, inputParams, index) {
+    }
+    processConstant(context, result, inputParams, index) {
         result["value"] = result["value"] || new Array();
-        var constantValue = 0;
+        let constantValue = 0;
         switch (inputParams["name"].toUpperCase()) {
             case "PI":
                 constantValue = Math.PI;
@@ -101,7 +90,6 @@ var Calc = (function (_super) {
                 break;
         }
         result["value"].push(constantValue);
-    };
-    return Calc;
-}(Nodox_Modules_NodoxModule_1.NodoxModule));
+    }
+}
 exports.Calc = Calc;
