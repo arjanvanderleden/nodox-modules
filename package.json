@@ -5,14 +5,12 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build:test": "tsc -p ./test/tsconfig.json",
-    "pretest": "npm run build && npm run build:test",
-    "test": "jest",
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix",
+    "test": "jest --coverage",
     "clean:dist": "rimraf ./dist",
     "prebuild": "npm run clean:dist",
-    "build": "tsc",
-    "precover": "npm run pretest",
-    "cover": "node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- -R spec test/*.js"
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
@@ -21,18 +19,26 @@
   "keywords": [
     "Nodox"
   ],
-  "author": "arjan.vander.leden@stepup.nl",
+  "author": "arjan@vanderleden.dev",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/arjanvanderleden/nodox-modules/issues"
   },
   "homepage": "https://github.com/arjanvanderleden/nodox-modules#readme",
   "dependencies": {
+    "@avdl/point": "^0.1.1",
     "nodox-core": "github:arjanvanderleden/nodox-core"
   },
   "devDependencies": {
     "@types/jest": "^26.0.23",
     "@types/node": "^8.0.20",
+    "@typescript-eslint/eslint-plugin": "^4.22.1",
+    "@typescript-eslint/parser": "^4.22.1",
+    "eslint": "^7.25.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.3.1",
     "jest": "^26.6.3",
     "rimraf": "^3.0.2",
     "ts-jest": "^26.5.5",

@@ -1,72 +1,75 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Calc = void 0;
-const Nodox_Modules_NodoxModule_1 = require("./Nodox.Modules.NodoxModule");
-class Calc extends Nodox_Modules_NodoxModule_1.NodoxModuleBase {
+const nodox_core_1 = require("nodox-core");
+class Calc extends nodox_core_1.NodoxModuleBase {
     constructor() {
         super();
-        this.name = "Calc";
-        this.description = "Definitions for math functions";
-        this.namespace = "nodox.modules.calc";
-        this.dependencies = ["nodox.modules.core"];
+        this.name = 'Calc';
+        this.description = 'Definitions for math functions';
+        this.namespace = 'nodox.modules.calc';
+        this.dependencies = ['nodox.modules.core'];
         this.dataTypes = [];
         this.definitions = [
             {
-                name: "Square",
-                description: "calculates square of two numbers",
+                name: 'Square',
+                description: 'calculates square of two numbers',
                 processFunction: this.processSquare,
+                processingMode: nodox_core_1.NodeProcessingMode.wrap,
                 inputs: [{
-                        name: "a",
-                        description: "First number",
-                        dataType: "nodox.modules.core.number"
+                        name: 'a',
+                        description: 'First number',
+                        dataType: 'nodox.modules.core.number'
                     }
                 ],
                 outputs: [{
-                        name: "square",
-                        description: "Square of a",
-                        dataType: this.namespace + ".number"
+                        name: 'square',
+                        description: 'Square of a',
+                        dataType: this.namespace + '.number'
                     }],
-                icon: "action:ic_3d_rotation",
-                fullName: this.namespace + ".square"
+                icon: 'action:ic_3d_rotation',
+                fullName: this.namespace + '.square'
             },
             {
-                name: "Square root",
-                description: "calculates square of two numbers",
+                name: 'Square root',
+                description: 'calculates square of two numbers',
                 processFunction: this.processSquare,
+                processingMode: nodox_core_1.NodeProcessingMode.wrap,
                 inputs: [{
-                        name: "a",
-                        description: "First number",
-                        dataType: "nodox.modules.core.number"
+                        name: 'a',
+                        description: 'First number',
+                        dataType: 'nodox.modules.core.number'
                     }
                 ],
                 outputs: [{
-                        name: "squareroot",
-                        description: "Squareroot of a",
-                        dataType: "nodox.modules.core.number"
+                        name: 'squareroot',
+                        description: 'Squareroot of a',
+                        dataType: 'nodox.modules.core.number'
                     }],
-                icon: "action:ic_3d_rotation",
-                fullName: this.namespace + ".squareroot",
+                icon: 'action:ic_3d_rotation',
+                fullName: this.namespace + '.squareroot'
             },
             {
-                name: "Math constant",
-                description: "Provides a math constant like Pi",
+                name: 'Math constant',
+                description: 'Provides a math constant like Pi',
                 processFunction: this.processConstant,
+                processingMode: nodox_core_1.NodeProcessingMode.wrap,
                 inputs: [{
-                        name: "name",
-                        description: "A string that can be translated into a mathematical constant like pi, PI, Pi",
-                        dataType: "nodox.modules.core.string",
-                        editorType: "select",
-                        valueOptions: ["PI", "E"],
-                        defaultValue: "PI"
+                        name: 'name',
+                        description: 'A string that can be translated into a mathematical constant like pi, PI, Pi',
+                        dataType: 'nodox.modules.core.string',
+                        editorType: 'select',
+                        valueOptions: ['PI', 'E'],
+                        defaultValue: 'PI'
                     }
                 ],
                 outputs: [{
-                        name: "value",
-                        description: "Value of constant",
-                        dataType: "nodox.modules.core.number"
+                        name: 'value',
+                        description: 'Value of constant',
+                        dataType: 'nodox.modules.core.number'
                     }],
-                icon: "nodox:math_constant",
-                fullName: this.namespace + ".constant"
+                icon: 'nodox:math_constant',
+                fullName: this.namespace + '.constant'
             }
         ];
     }
@@ -79,17 +82,18 @@ class Calc extends Nodox_Modules_NodoxModule_1.NodoxModuleBase {
         return processResult;
     }
     processConstant(context, result, inputParams, index) {
-        result["value"] = result["value"] || new Array();
+        var _a;
+        result.value = (_a = result.value) !== null && _a !== void 0 ? _a : [];
         let constantValue = 0;
-        switch (inputParams["name"].toUpperCase()) {
-            case "PI":
+        switch (inputParams.name.toUpperCase()) {
+            case 'PI':
                 constantValue = Math.PI;
                 break;
-            case "E":
+            case 'E':
                 constantValue = Math.E;
                 break;
         }
-        result["value"].push(constantValue);
+        result.value.push(constantValue);
     }
 }
 exports.Calc = Calc;
