@@ -1,4 +1,4 @@
-import { NodoxRunningContext, NodoxModule, DataType, NodeProcessingMode, Lookup, NodoxModuleBase, NodoxNodeDefinition, ProcessFunction, PreprocessFunction, PostprocessFunction } from '@avdl/nodox-core';
+import { NodoxRunningContext, NodoxModule, DataType, NodeProcessingMode, Lookup, NodoxModuleBase, NodoxNodeDefinition, ProcessFunction, PreprocessFunction, PostprocessFunction, CORE_MODULE_NAMESPACE } from '@avdl/nodox-core';
 
 import { Point } from '@avdl/point';
 
@@ -8,10 +8,15 @@ const convert = {
   }
 };
 declare namespace SVG {
+  // eslint-disable-next-line no-unused-vars
   const Color: any;
+  // eslint-disable-next-line no-unused-vars
   const Shape: any;
+  // eslint-disable-next-line no-unused-vars
   const Matrix: any;
+  // eslint-disable-next-line no-unused-vars
   const Element: any;
+  // eslint-disable-next-line no-unused-vars
   const G: any;
 }
 
@@ -33,10 +38,10 @@ export class Svg extends NodoxModuleBase {
     super();
     this.name = 'Svg';
     this.description = 'Definitions for creating svg elements';
-    this.namespace = 'nodox.modules.svg';
+    this.namespace = 'nodox.module.svg';
     this.dependencies = [
-      'nodox.modules.core',
-      'nodox.modules.math'];
+      CORE_MODULE_NAMESPACE,
+      'nodox.module.math'];
     this.cloneFunctions[this.namespace + '.element'] = (element: any) => {
       return (<any>element).clone();
     };
@@ -65,13 +70,13 @@ export class Svg extends NodoxModuleBase {
         inputs: [{
           name: 'x',
           description: 'X value of point',
-          dataType: 'nodox.modules.core.number',
+          dataType: `${CORE_MODULE_NAMESPACE}.number`,
           defaultValue: 0
         },
         {
           name: 'y',
           description: 'Y value of point',
-          dataType: 'nodox.modules.core.number',
+          dataType: `${CORE_MODULE_NAMESPACE}.number`,
           defaultValue: 0
         }],
         outputs: [{
@@ -91,18 +96,18 @@ export class Svg extends NodoxModuleBase {
         inputs: [{
           name: 'r',
           description: 'Red value of color',
-          dataType: 'nodox.modules.core.number',
+          dataType: `${CORE_MODULE_NAMESPACE}.number`,
           defaultValue: 0
         },
         {
           name: 'g',
           description: 'Green value of color',
-          dataType: 'nodox.modules.core.number',
+          dataType: `${CORE_MODULE_NAMESPACE}.number`,
           defaultValue: 0
         }, {
           name: 'b',
           description: 'Blue value of color',
-          dataType: 'nodox.modules.core.number',
+          dataType: `${CORE_MODULE_NAMESPACE}.number`,
           defaultValue: 0
         }],
         outputs: [{
@@ -123,18 +128,18 @@ export class Svg extends NodoxModuleBase {
         inputs: [{
           name: 'h',
           description: 'Hue value of color',
-          dataType: 'nodox.modules.core.number',
+          dataType: `${CORE_MODULE_NAMESPACE}.number`,
           defaultValue: 0
         },
         {
           name: 's',
           description: 'Saturation value of color',
-          dataType: 'nodox.modules.core.number',
+          dataType: `${CORE_MODULE_NAMESPACE}.number`,
           defaultValue: 0
         }, {
           name: 'v',
           description: 'Value component of color',
-          dataType: 'nodox.modules.core.number',
+          dataType: `${CORE_MODULE_NAMESPACE}.number`,
           defaultValue: 0
         }],
         outputs: [{
@@ -169,12 +174,12 @@ export class Svg extends NodoxModuleBase {
           {
             name: 'distance',
             description: 'Distance between the points',
-            dataType: 'nodox.modules.core.number'
+            dataType: `${CORE_MODULE_NAMESPACE}.number`
           },
           {
             name: 'angle',
             description: 'Angle between the points',
-            dataType: 'nodox.modules.core.number'
+            dataType: `${CORE_MODULE_NAMESPACE}.number`
           },
           {
             name: 'vector',
@@ -201,7 +206,7 @@ export class Svg extends NodoxModuleBase {
         {
           name: 'radius',
           description: 'Radius of circle',
-          dataType: 'nodox.modules.core.number',
+          dataType: `${CORE_MODULE_NAMESPACE}.number`,
           defaultValue: 10
         }],
         outputs: [{
@@ -227,13 +232,13 @@ export class Svg extends NodoxModuleBase {
         {
           name: 'width',
           description: 'Width of the rectangle',
-          dataType: 'nodox.modules.core.number',
+          dataType: `${CORE_MODULE_NAMESPACE}.number`,
           defaultValue: 10
         },
         {
           name: 'height',
           description: 'Height of the rectangle',
-          dataType: 'nodox.modules.core.number',
+          dataType: `${CORE_MODULE_NAMESPACE}.number`,
           defaultValue: 10
         }],
         outputs: [
@@ -255,39 +260,39 @@ export class Svg extends NodoxModuleBase {
           {
             name: 'position',
             description: 'position of center',
-            dataType: 'nodox.modules.svg.point',
+            dataType: 'nodox.module.svg.point',
             defaultValue: () => new Point(0, 0)
           }, {
             name: 'columns',
             description: 'number of columns',
-            dataType: 'nodox.modules.core.number',
+            dataType: `${CORE_MODULE_NAMESPACE}.number`,
             defaultValue: 0
           },
           {
             name: 'rows',
             description: 'number of rows',
-            dataType: 'nodox.modules.core.number',
+            dataType: `${CORE_MODULE_NAMESPACE}.number`,
             defaultValue: 0
           }, {
             name: 'width',
             description: 'width of grid',
-            dataType: 'nodox.modules.core.number',
+            dataType: `${CORE_MODULE_NAMESPACE}.number`,
             defaultValue: 0
           }, {
             name: 'height',
             description: 'height of grid',
-            dataType: 'nodox.modules.core.number',
+            dataType: `${CORE_MODULE_NAMESPACE}.number`,
             defaultValue: 0
           }
         ],
         outputs: [{
           name: 'point',
           description: 'An array of points',
-          dataType: 'nodox.modules.svg.point'
+          dataType: 'nodox.module.svg.point'
         }, {
           name: 'count',
           description: 'Numbur of points generated',
-          dataType: 'nodox.modules.core.number'
+          dataType: `${CORE_MODULE_NAMESPACE}.number`
         }],
         icon: 'nodox:svg_grid',
         fullName: this.namespace + '.grid'
@@ -302,39 +307,39 @@ export class Svg extends NodoxModuleBase {
           {
             name: 'center',
             description: 'position of center',
-            dataType: 'nodox.modules.svg.point',
+            dataType: 'nodox.module.svg.point',
             defaultValue: () => new Point(0, 0)
           }, {
             name: 'radius',
             description: 'radius of the circle',
-            dataType: 'nodox.modules.core.number',
+            dataType: `${CORE_MODULE_NAMESPACE}.number`,
             defaultValue: 0
           }, {
             name: 'count',
             description: 'number of columns',
-            dataType: 'nodox.modules.core.number',
+            dataType: `${CORE_MODULE_NAMESPACE}.number`,
             defaultValue: 0
           }],
         outputs: [
           {
             name: 'point',
             description: 'An array of points',
-            dataType: 'nodox.modules.svg.point'
+            dataType: 'nodox.module.svg.point'
           },
           {
             name: 'x',
             description: 'An array of x values',
-            dataType: 'nodox.modules.core.number'
+            dataType: `${CORE_MODULE_NAMESPACE}.number`
           },
           {
             name: 'y',
             description: 'An array of y values',
-            dataType: 'nodox.modules.core.number'
+            dataType: `${CORE_MODULE_NAMESPACE}.number`
           },
           {
             name: 'count',
             description: 'Numbur of points generated',
-            dataType: 'nodox.modules.core.number'
+            dataType: `${CORE_MODULE_NAMESPACE}.number`
           }],
         icon: 'nodox:svg_radialGrid',
         fullName: this.namespace + '.radialGrid'
@@ -361,34 +366,34 @@ export class Svg extends NodoxModuleBase {
           {
             name: 'center',
             description: 'position of center',
-            dataType: 'nodox.modules.svg.point',
+            dataType: 'nodox.module.svg.point',
             defaultValue: new Point(0, 0)
           }, {
             name: 'radius',
             description: 'radius of the points of the polygon',
-            dataType: 'nodox.modules.core.number',
+            dataType: `${CORE_MODULE_NAMESPACE}.number`,
             defaultValue: 0
           }, {
             name: 'count',
             description: 'number of columns',
-            dataType: 'nodox.modules.core.number',
+            dataType: `${CORE_MODULE_NAMESPACE}.number`,
             defaultValue: 0
           },
           {
             name: 'starShaped',
             description: 'Convex',
-            dataType: 'nodox.modules.core.boolean',
+            dataType: 'nodox.module.core.boolean',
             defaultValue: false
           },
           {
             name: 'useInnerRadius',
             description: 'Convex',
-            dataType: 'nodox.modules.core.boolean',
+            dataType: 'nodox.module.core.boolean',
             defaultValue: false
           }, {
             name: 'innerRadius',
             description: 'inner radius',
-            dataType: 'nodox.modules.core.number',
+            dataType: `${CORE_MODULE_NAMESPACE}.number`,
             defaultValue: 0
           }
 
@@ -436,7 +441,7 @@ export class Svg extends NodoxModuleBase {
           }, {
             name: 'opacity',
             description: 'Fill opacity',
-            dataType: 'nodox.modules.core.number',
+            dataType: `${CORE_MODULE_NAMESPACE}.number`,
             defaultValue: 1
           }
         ],
@@ -470,7 +475,7 @@ export class Svg extends NodoxModuleBase {
           }, {
             name: 'width',
             description: 'Stroke width',
-            dataType: 'nodox.modules.core.number',
+            dataType: `${CORE_MODULE_NAMESPACE}.number`,
             defaultValue: 0
           }
         ],
@@ -544,7 +549,7 @@ export class Svg extends NodoxModuleBase {
         {
           name: 'groupElements',
           description: 'Convex',
-          dataType: 'nodox.modules.core.boolean',
+          dataType: 'nodox.module.core.boolean',
           defaultValue: true
         }],
         outputs: [{
@@ -571,12 +576,12 @@ export class Svg extends NodoxModuleBase {
           }, {
             name: 'dx',
             description: 'horizontal translation',
-            dataType: 'nodox.modules.core.number',
+            dataType: `${CORE_MODULE_NAMESPACE}.number`,
             defaultValue: 0
           }, {
             name: 'dy',
             description: 'vertical translation',
-            dataType: 'nodox.modules.core.number',
+            dataType: `${CORE_MODULE_NAMESPACE}.number`,
             defaultValue: 0
           }
         ],
@@ -611,7 +616,7 @@ export class Svg extends NodoxModuleBase {
           {
             name: 'factor',
             description: 'scale factor',
-            dataType: 'nodox.modules.core.number',
+            dataType: `${CORE_MODULE_NAMESPACE}.number`,
             defaultValue: 10
           }
         ],
@@ -644,7 +649,7 @@ export class Svg extends NodoxModuleBase {
           {
             name: 'angle',
             description: 'angle of rotation in degrees',
-            dataType: 'nodox.modules.core.number',
+            dataType: `${CORE_MODULE_NAMESPACE}.number`,
             defaultValue: 10
           }
         ],

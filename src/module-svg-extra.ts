@@ -1,5 +1,5 @@
-import { SvgRunningContext } from './Nodox.Modules.Svg';
-import { NodoxNodeDefinition, Lookup, NodoxModuleBase } from '@avdl/nodox-core';
+import { SvgRunningContext } from './module-svg';
+import { NodoxNodeDefinition, Lookup, NodoxModuleBase, CORE_MODULE_NAMESPACE } from '@avdl/nodox-core';
 import { Point } from '@avdl/point';
 // declare namespace SVG {
 //   const Color: any;
@@ -18,9 +18,9 @@ export class SvgExtra extends NodoxModuleBase {
     super();
     this.name = 'SvgExtra';
     this.dependencies = [
-      'nodox.modules.svg'
+      'nodox.module.svg'
     ];
-    this.namespace = 'nodox.modules.svg';
+    this.namespace = 'nodox.module.svg';
     this.description = 'demo nodes for svg';
     this.dataTypes = [];
     this.definitions = <NodoxNodeDefinition[]>[
@@ -34,52 +34,52 @@ export class SvgExtra extends NodoxModuleBase {
           {
             name: 'center',
             description: 'position of center',
-            dataType: 'nodox.modules.svg.point',
+            dataType: 'nodox.module.svg.point',
             defaultValue: () => new Point(0, 0)
           },
           {
             name: 'count',
             description: 'number of columns',
-            dataType: 'nodox.modules.core.number',
+            dataType: `${CORE_MODULE_NAMESPACE}.number`,
             defaultValue: 0
           },
           {
             name: 'innerRadius',
             description: 'radius in-side of the sun flames',
-            dataType: 'nodox.modules.core.number',
+            dataType: `${CORE_MODULE_NAMESPACE}.number`,
             defaultValue: 0
           }, {
             name: 'outerRadius',
             label: 'outer Radius',
             description: 'radius out-side of the tip of the flames',
-            dataType: 'nodox.modules.core.number',
+            dataType: `${CORE_MODULE_NAMESPACE}.number`,
             defaultValue: 0
           }, {
             name: 'baseStrength',
             label: 'Strength of the base as ratio of the difference between inner and outerradius',
             description: 'radius out-side of the tip of the flames',
-            dataType: 'nodox.modules.core.number',
+            dataType: `${CORE_MODULE_NAMESPACE}.number`,
             defaultValue: 0
           }, {
             name: 'baseTwist',
             description: 'Twist of the flame base as ratio of the base angle',
-            dataType: 'nodox.modules.core.number',
+            dataType: `${CORE_MODULE_NAMESPACE}.number`,
             defaultValue: 0
           }, {
             name: 'tipRotation',
             description: 'rotation of the flame tips as ratio of the base angle',
-            dataType: 'nodox.modules.core.number',
+            dataType: `${CORE_MODULE_NAMESPACE}.number`,
             defaultValue: 0
           },
           {
             name: 'tipTwist',
             description: 'twist of the flame tips as absolute angle',
-            dataType: 'nodox.modules.core.number',
+            dataType: `${CORE_MODULE_NAMESPACE}.number`,
             defaultValue: 0
           }, {
             name: 'tipStrength',
             description: 'The strength of the flame tips as ratio outerradius',
-            dataType: 'nodox.modules.core.number',
+            dataType: `${CORE_MODULE_NAMESPACE}.number`,
             defaultValue: 0
           }
 
@@ -87,7 +87,7 @@ export class SvgExtra extends NodoxModuleBase {
         outputs: [{
           name: 'sun',
           description: 'The sun element',
-          dataType: 'nodox.modules.svg.element'
+          dataType: 'nodox.module.svg.element'
         }],
         icon: 'nodox:svg_point',
         fullName: this.namespace + '.sun'

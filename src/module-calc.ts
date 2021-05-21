@@ -1,4 +1,4 @@
-import { NodoxNodeDefinition, NodoxRunningContext, Lookup, NodoxModuleBase, NodeProcessingMode } from '@avdl/nodox-core';
+import { NodoxNodeDefinition, NodoxRunningContext, Lookup, NodoxModuleBase, NodeProcessingMode, CORE_MODULE_NAMESPACE } from '@avdl/nodox-core';
 
 export class Calc extends NodoxModuleBase {
     name: string;
@@ -9,8 +9,8 @@ export class Calc extends NodoxModuleBase {
       super();
       this.name = 'Calc';
       this.description = 'Definitions for math functions';
-      this.namespace = 'nodox.modules.calc';
-      this.dependencies = ['nodox.modules.core'];
+      this.namespace = 'nodox.module.calc';
+      this.dependencies = [CORE_MODULE_NAMESPACE];
       this.dataTypes = [];
       this.definitions = [
         {
@@ -21,13 +21,13 @@ export class Calc extends NodoxModuleBase {
           inputs: [{
             name: 'a',
             description: 'First number',
-            dataType: 'nodox.modules.core.number'
+            dataType: `${CORE_MODULE_NAMESPACE}.number`
           }
           ],
           outputs: [{
             name: 'square',
             description: 'Square of a',
-            dataType: this.namespace + '.number'
+            dataType: `${CORE_MODULE_NAMESPACE}.number`
           }],
           icon: 'action:ic_3d_rotation',
           fullName: this.namespace + '.square'
@@ -40,13 +40,13 @@ export class Calc extends NodoxModuleBase {
           inputs: [{
             name: 'a',
             description: 'First number',
-            dataType: 'nodox.modules.core.number'
+            dataType: 'nodox.module.core.number'
           }
           ],
           outputs: [{
             name: 'squareroot',
             description: 'Squareroot of a',
-            dataType: 'nodox.modules.core.number'
+            dataType: `${CORE_MODULE_NAMESPACE}.number`
           }],
           icon: 'action:ic_3d_rotation',
           fullName: this.namespace + '.squareroot'
@@ -59,7 +59,7 @@ export class Calc extends NodoxModuleBase {
           inputs: [{
             name: 'name',
             description: 'A string that can be translated into a mathematical constant like pi, PI, Pi',
-            dataType: 'nodox.modules.core.string',
+            dataType: 'nodox.module.core.string',
             editorType: 'select',
             valueOptions: ['PI', 'E'],
             defaultValue: 'PI'
@@ -68,7 +68,7 @@ export class Calc extends NodoxModuleBase {
           outputs: [{
             name: 'value',
             description: 'Value of constant',
-            dataType: 'nodox.modules.core.number'
+            dataType: `${CORE_MODULE_NAMESPACE}.number`
           }],
           icon: 'nodox:math_constant',
           fullName: this.namespace + '.constant'

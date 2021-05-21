@@ -1,4 +1,4 @@
-import { Svg, SvgRunningContext } from './Nodox.Modules.Svg';
+import { Svg, SvgRunningContext } from './module-svg';
 import { NodoxModule, NodoxNodeDefinition, Lookup } from '@avdl/nodox-core';
 import { Point } from '@avdl/point';
 
@@ -21,32 +21,32 @@ export class SvgGrids extends Svg {
           {
             name: 'center',
             description: 'position of center',
-            dataType: 'nodox.modules.svg.point',
+            dataType: 'nodox.module.svg.point',
             defaultValue: () => { return new Point(0, 0); }
           }, {
             name: 'rings',
             description: 'number of rings around center)',
-            dataType: 'nodox.modules.core.number',
+            dataType: 'nodox.module.core.number',
             defaultValue: 1
           }, {
             name: 'size',
             description: 'size (distance between centers)',
-            dataType: 'nodox.modules.core.number',
+            dataType: 'nodox.module.core.number',
             defaultValue: 0
           }, {
             name: 'angle',
             description: 'rotation of grid',
-            dataType: 'nodox.modules.core.number',
+            dataType: 'nodox.module.core.number',
             defaultValue: 0
           }],
         outputs: [{
           name: 'point',
           description: 'An array of points',
-          dataType: 'nodox.modules.svg.point'
+          dataType: 'nodox.module.svg.point'
         }, {
           name: 'count',
           description: 'Numbur of points generated',
-          dataType: 'nodox.modules.core.number'
+          dataType: 'nodox.module.core.number'
         }],
         icon: 'nodox:svg_hexGrid',
         fullName: this.namespace + '.hexGrid'

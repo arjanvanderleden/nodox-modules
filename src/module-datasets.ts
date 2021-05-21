@@ -9,20 +9,9 @@ export class Datasets extends NodoxModuleBase {
       super();
       this.name = 'Datasets';
       this.description = 'Definitions to manipulate datasets in Nodox';
-      this.namespace = 'nodox.modules.datasets';
+      this.namespace = 'nodox.module.datasets';
       this.dependencies = [];
-      this.dataTypes = [
-        {
-          name: 'number',
-          description: 'javascript type nummber',
-          accepts: []
-        },
-        {
-          name: 'string',
-          description: 'javascript type string',
-          accepts: ['*']
-        }
-      ];
+      this.dataTypes = [];
       this.definitions = [
         {
           name: 'Load',
