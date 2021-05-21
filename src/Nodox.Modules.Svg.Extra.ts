@@ -1,5 +1,5 @@
 import { SvgRunningContext } from './Nodox.Modules.Svg';
-import { NodoxNodeDefinition, Lookup, NodoxModuleBase } from 'nodox-core';
+import { NodoxNodeDefinition, Lookup, NodoxModuleBase } from '@avdl/nodox-core';
 import { Point } from '@avdl/point';
 // declare namespace SVG {
 //   const Color: any;

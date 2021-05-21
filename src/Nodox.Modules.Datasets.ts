@@ -1,4 +1,4 @@
-import { NodoxNodeDefinition, NodoxRunningContext, Lookup, NodoxModuleBase, NodeProcessingMode } from 'nodox-core';
+import { NodoxNodeDefinition, NodoxRunningContext, Lookup, NodoxModuleBase, NodeProcessingMode } from '@avdl/nodox-core';
 
 export class Datasets extends NodoxModuleBase {
     name: string;

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Domains = void 0;
-const nodox_core_1 = require("nodox-core");
+const nodox_core_1 = require("@avdl/nodox-core");
 class Domains extends nodox_core_1.NodoxModuleBase {
     constructor() {
         super();

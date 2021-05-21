@@ -1,5 +1,5 @@
 import { SvgRunningContext } from './Nodox.Modules.Svg';
-import { NodoxNodeDefinition, NodoxModuleBase } from 'nodox-core';
+import { NodoxNodeDefinition, NodoxModuleBase } from '@avdl/nodox-core';
 export declare class SvgExtra extends NodoxModuleBase {
     name: string;
     description: string;

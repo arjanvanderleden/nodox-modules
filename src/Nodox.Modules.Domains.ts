@@ -1,4 +1,4 @@
-import { NodoxNodeDefinition, DataType, NodoxRunningContext, Lookup, NodoxModuleBase, NodeProcessingMode } from 'nodox-core';
+import { NodoxNodeDefinition, DataType, NodoxRunningContext, Lookup, NodoxModuleBase, NodeProcessingMode } from '@avdl/nodox-core';
 
 export class Domains extends NodoxModuleBase {
         name: string;

@@ -1,5 +1,5 @@
 import { Svg, SvgRunningContext } from './Nodox.Modules.Svg';
-import { NodoxModule, NodoxNodeDefinition, Lookup } from 'nodox-core';
+import { NodoxModule, NodoxNodeDefinition, Lookup } from '@avdl/nodox-core';
 import { Point } from '@avdl/point';
 
 export class SvgGrids extends Svg {

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SvgExtra = void 0;
-const nodox_core_1 = require("nodox-core");
+const nodox_core_1 = require("@avdl/nodox-core");
 const point_1 = require("@avdl/point");
 // declare namespace SVG {
 //   const Color: any;

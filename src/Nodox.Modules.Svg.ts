@@ -1,4 +1,4 @@
-import { NodoxRunningContext, NodoxModule, DataType, NodeProcessingMode, Lookup, NodoxModuleBase, NodoxNodeDefinition, ProcessFunction, PreprocessFunction, PostprocessFunction } from 'nodox-core';
+import { NodoxRunningContext, NodoxModule, DataType, NodeProcessingMode, Lookup, NodoxModuleBase, NodoxNodeDefinition, ProcessFunction, PreprocessFunction, PostprocessFunction } from '@avdl/nodox-core';
 
 import { Point } from '@avdl/point';
 

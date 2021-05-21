@@ -1,4 +1,4 @@
-import { NodoxRunningContext, NodoxModule, Lookup, NodoxModuleBase, NodoxNodeDefinition } from 'nodox-core';
+import { NodoxRunningContext, NodoxModule, Lookup, NodoxModuleBase, NodoxNodeDefinition } from '@avdl/nodox-core';
 export interface SvgRunningContext extends NodoxRunningContext {
     svg: any;
 }

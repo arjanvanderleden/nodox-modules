@@ -26,8 +26,8 @@
   },
   "homepage": "https://github.com/arjanvanderleden/nodox-modules#readme",
   "dependencies": {
-    "@avdl/point": "^0.1.1",
-    "nodox-core": "github:arjanvanderleden/nodox-core"
+    "@avdl/nodox-core": "^0.2.0",
+    "@avdl/point": "^0.1.1"
   },
   "devDependencies": {
     "@types/jest": "^26.0.23",
