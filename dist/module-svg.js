@@ -16,7 +16,7 @@ class Svg extends nodox_core_1.NodoxModuleBase {
         this.namespace = 'nodox.module.svg';
         this.dependencies = [
             nodox_core_1.CORE_MODULE_NAMESPACE,
-            'nodox.module.math'
+            'nodox.module.calc'
         ];
         this.cloneFunctions[this.namespace + '.element'] = (element) => {
             return element.clone();
